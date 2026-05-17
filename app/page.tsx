@@ -1,0 +1,239 @@
+import Image from "next/image";
+import siteMetadata from "@/lib/site-config";
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+
+function GitHubIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+    </svg>
+  );
+}
+
+function LeafDecoration({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 100 180"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M50 10 C50 10, 30 30, 35 55 C38 70, 45 75, 50 90"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.6"
+      />
+      <ellipse
+        cx="30"
+        cy="25"
+        rx="12"
+        ry="20"
+        fill="currentColor"
+        opacity="0.5"
+        transform="rotate(-30 30 25)"
+      />
+      <ellipse
+        cx="25"
+        cy="50"
+        rx="10"
+        ry="18"
+        fill="currentColor"
+        opacity="0.45"
+        transform="rotate(-40 25 50)"
+      />
+      <ellipse
+        cx="30"
+        cy="75"
+        rx="11"
+        ry="19"
+        fill="currentColor"
+        opacity="0.4"
+        transform="rotate(-35 30 75)"
+      />
+      <ellipse
+        cx="35"
+        cy="100"
+        rx="10"
+        ry="17"
+        fill="currentColor"
+        opacity="0.5"
+        transform="rotate(-25 35 100)"
+      />
+      <ellipse
+        cx="70"
+        cy="35"
+        rx="12"
+        ry="20"
+        fill="currentColor"
+        opacity="0.5"
+        transform="rotate(30 70 35)"
+      />
+      <ellipse
+        cx="75"
+        cy="60"
+        rx="10"
+        ry="18"
+        fill="currentColor"
+        opacity="0.45"
+        transform="rotate(40 75 60)"
+      />
+      <ellipse
+        cx="70"
+        cy="85"
+        rx="11"
+        ry="19"
+        fill="currentColor"
+        opacity="0.4"
+        transform="rotate(35 70 85)"
+      />
+      <ellipse
+        cx="65"
+        cy="110"
+        rx="10"
+        ry="17"
+        fill="currentColor"
+        opacity="0.5"
+        transform="rotate(25 65 110)"
+      />
+      <ellipse
+        cx="50"
+        cy="130"
+        rx="9"
+        ry="16"
+        fill="currentColor"
+        opacity="0.45"
+        transform="rotate(5 50 130)"
+      />
+      <ellipse
+        cx="55"
+        cy="155"
+        rx="8"
+        ry="14"
+        fill="currentColor"
+        opacity="0.4"
+        transform="rotate(15 55 155)"
+      />
+    </svg>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Watercolor gradient background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            linear-gradient(
+              180deg,
+              #c5d5d3 0%,
+              #d8e2e0 15%,
+              #e8e5e2 30%,
+              #f0e8e4 45%,
+              #f2e4de 60%,
+              #efd5cc 80%,
+              #e8c9be 100%
+            )
+          `,
+        }}
+      />
+
+      {/* Subtle texture overlay */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          mixBlendMode: "overlay",
+        }}
+      />
+
+      {/* Botanical decorations */}
+      <LeafDecoration className="absolute top-0 left-0 w-24 md:w-32 lg:w-40 h-auto text-[#7a9e8e] -translate-x-2 -translate-y-2 rotate-12" />
+      <LeafDecoration className="absolute bottom-0 right-0 w-24 md:w-32 lg:w-40 h-auto text-[#7a9e8e] translate-x-2 translate-y-2 rotate-180" />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
+        <div className="max-w-2xl mx-auto text-center">
+          {/* Profile Photo + social bubbles on hover / focus */}
+          <div className="mb-8">
+            <div
+              className="group relative mx-auto flex w-fit flex-col items-center rounded-full pt-10 -mt-10 outline-none focus-visible:ring-2 focus-visible:ring-[#7a9e8e]/45 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+              tabIndex={0}
+              aria-label={`${siteMetadata.author} — hover or focus to open LinkedIn or GitHub`}
+            >
+              <div className="absolute bottom-full left-1/2 z-20 mb-2 flex -translate-x-1/2 gap-3 md:mb-3">
+                <a
+                  href={siteMetadata.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-11 w-11 translate-y-3 scale-90 items-center justify-center rounded-full bg-white/95 text-[#0a66c2] opacity-0 shadow-md ring-2 ring-[#7a9e8e]/25 backdrop-blur-sm pointer-events-none transition-[transform,opacity,box-shadow] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100 motion-reduce:duration-150 motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100 motion-reduce:group-focus-within:translate-y-0 motion-reduce:group-focus-within:scale-100 hover:ring-[#7a9e8e]/45 hover:shadow-lg focus-visible:ring-[#7a9e8e]/55 focus-visible:outline-none"
+                  aria-label={`${siteMetadata.author} on LinkedIn`}
+                >
+                  <LinkedInIcon className="h-5 w-5" />
+                </a>
+                <a
+                  href={siteMetadata.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-11 w-11 translate-y-3 scale-90 items-center justify-center rounded-full bg-white/95 text-[#24292f] opacity-0 shadow-md ring-2 ring-[#7a9e8e]/25 backdrop-blur-sm pointer-events-none transition-[transform,opacity,box-shadow] delay-75 duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100 motion-reduce:delay-0 motion-reduce:duration-150 motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100 motion-reduce:group-focus-within:translate-y-0 motion-reduce:group-focus-within:scale-100 hover:ring-[#7a9e8e]/45 hover:shadow-lg focus-visible:ring-[#7a9e8e]/55 focus-visible:outline-none"
+                  aria-label={`${siteMetadata.author} on GitHub`}
+                >
+                  <GitHubIcon className="h-5 w-5" />
+                </a>
+              </div>
+
+              <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg ring-4 ring-[#7a9e8e]/30 transition-[transform,box-shadow] duration-300 ease-out group-hover:scale-[1.02] group-hover:shadow-xl group-hover:ring-[#7a9e8e]/45 group-focus-within:scale-[1.02] group-focus-within:shadow-xl group-focus-within:ring-[#7a9e8e]/45 md:h-44 md:w-44">
+                <Image
+                  src={siteMetadata.avatarImage}
+                  alt="Profile photo"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Name */}
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-medium tracking-wide text-[#4a5d54] mb-4">
+            {siteMetadata.author}
+          </h1>
+
+          {/* Quote */}
+          <p className="font-mono text-base md:text-lg tracking-[0.3em] text-[#5a6b62] mb-10 lowercase">
+            {siteMetadata.headerTitle}
+          </p>
+
+          {/* Decorative line */}
+          <div className="w-16 h-px bg-[#7a9e8e]/50 mx-auto mb-10" />
+
+          {/* Introduction */}
+          <p className="font-sans text-base md:text-lg leading-relaxed text-[#5a6b62] max-w-xl mx-auto">
+            {siteMetadata.description}
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}
