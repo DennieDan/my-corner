@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { JourneyTimeline } from "@/components/journey-timeline";
 import siteMetadata from "@/lib/site-config";
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -139,7 +140,7 @@ function LeafDecoration({ className }: { className?: string }) {
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen">
       {/* Watercolor gradient background */}
       <div
         className="absolute inset-0"
@@ -233,6 +234,10 @@ export default function HomePage() {
             {siteMetadata.description}
           </p>
         </div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-24 pt-8">
+        <JourneyTimeline />
       </div>
     </main>
   );
