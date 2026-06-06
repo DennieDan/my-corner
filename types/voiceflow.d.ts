@@ -3,6 +3,9 @@ declare global {
     voiceflow: {
       chat: {
         load: (config: Record<string, unknown>) => Promise<void>;
+        destroy: () => void;
+        open: () => void;
+        close: () => void;
         interact: (payload: {
           type: string;
           payload?: Record<string, string>;
