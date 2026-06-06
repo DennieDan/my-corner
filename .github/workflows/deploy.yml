@@ -32,6 +32,7 @@ jobs:
       - name: Install and Build
         env:
           NEXT_PUBLIC_VOICEFLOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID }}
+          NEXT_PUBLIC_VOICEFLOW_DELETE_STATE_URL: ${{ vars.NEXT_PUBLIC_VOICEFLOW_DELETE_STATE_URL }}
         run: |
           npm ci
           npm run build

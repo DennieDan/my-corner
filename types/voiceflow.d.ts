@@ -7,8 +7,8 @@ declare global {
         open: () => void;
         close: () => void;
         interact: (payload: {
-          type: string;
-          payload?: Record<string, string>;
+          type?: string;
+          payload?: Record<string, unknown>;
         }) => void;
         proactive: {
           push: (message: {
