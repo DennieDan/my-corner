@@ -4,6 +4,7 @@ type FormField = {
   type: string;
   prefilled?: boolean;
   placeholder?: string;
+  required?: boolean;
 };
 
 type PrefillData = Partial<Record<string, string>>;
@@ -19,10 +20,34 @@ type RenderContext = {
 };
 
 const FORM_FIELDS: FormField[] = [
-  { name: "name", label: "Name", type: "text", prefilled: true },
-  { name: "email", label: "Email", type: "email", prefilled: true },
-  { name: "phone", label: "Phone", type: "tel", placeholder: "(555) 123-4567" },
-  { name: "company", label: "Company", type: "text", placeholder: "Acme Inc." },
+  {
+    name: "name",
+    label: "Name",
+    type: "text",
+    prefilled: true,
+    required: true,
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+    placeholder: "your@email.com",
+    required: true,
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    type: "tel",
+    placeholder: "(65) 9123 4567",
+    required: false,
+  },
+  {
+    name: "company",
+    label: "Company",
+    type: "text",
+    placeholder: "Acme Inc.",
+    required: false,
+  },
 ];
 
 const FORM_STYLES = `
@@ -76,7 +101,7 @@ function createFormField(
   const input = document.createElement("input");
   input.type = field.type;
   input.name = field.name;
-  input.required = true;
+  input.required = field.required ?? true;
 
   const prefilled = prefillData[field.name];
   if (field.prefilled && prefilled) {
@@ -131,11 +156,17 @@ export const FormExtension = {
         if (!input) return;
 
         const value = input.value.trim();
-        input.classList.toggle("error", !value);
-        if (!value) valid = false;
+        const isEmpty = !value;
+
+        if (field.required) {
+          input.classList.toggle("error", isEmpty);
+          if (isEmpty) valid = false;
+        } else {
+          input.classList.remove("error");
+        }
         data[field.name] = value;
       });
-      console.log(data);
+
       if (!valid) return;
 
       button.disabled = true;
