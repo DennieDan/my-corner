@@ -30,6 +30,8 @@ jobs:
 
       # 3. Install dependencies and build Next.js static files
       - name: Install and Build
+        env:
+          NEXT_PUBLIC_VOICEFLOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID }}
         run: |
           npm ci
           npm run build

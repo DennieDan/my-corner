@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { FormExtension } from "@/components/chat/form-extension";
 
 export function VoiceflowWidget() {
   return (
@@ -10,10 +11,13 @@ export function VoiceflowWidget() {
       onLoad={() => {
         window.voiceflow.chat
           .load({
-            verify: { projectID: "6a1d03ef495496cb314ca703" },
+            verify: { projectID: process.env.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID },
             url: "https://general-runtime.voiceflow.com",
             voice: {
               url: "https://runtime-api.voiceflow.com",
+            },
+            assistant: {
+              extensions: [FormExtension],
             },
           })
           .then(() => {
