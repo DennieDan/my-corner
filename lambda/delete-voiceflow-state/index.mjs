@@ -60,6 +60,7 @@ export async function handler(event) {
   const requestOrigin = getRequestOrigin(event);
   const method = getRequestMethod(event);
 
+  // Handle CORS preflight request: what the browser sends before the actual request (to check CORS origin)
   if (method === "OPTIONS") {
     if (!resolveAllowedOrigin(requestOrigin, allowedOrigins)) {
       return { statusCode: 403, body: "" };
