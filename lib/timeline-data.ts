@@ -134,11 +134,11 @@ export const timelineEvents: TimelineEvent[] = [
     links: [
       {
         label: "View my Data Analytics Chatbot",
-        href: "https://data-analyzer.dandinh.in",
+        href: "https://data-analyzer-ybzy.onrender.com",
       },
       {
         label: "GitHub Repo",
-        href: "https://dan-data-analyzer.streamlit.app/",
+        href: "https://github.com/DennieDan/data-app",
       },
     ],
   },
@@ -167,7 +167,7 @@ export const timelineEvents: TimelineEvent[] = [
     links: [
       {
         label: "View app",
-        href: "https://classifier-agent.dandinh.in/ui/",
+        href: "https://classifier-agent.onrender.com/ui/",
       },
       {
         label: "GitHub Repo",
