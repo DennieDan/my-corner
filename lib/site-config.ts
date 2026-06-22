@@ -8,6 +8,7 @@ interface SiteMetadata {
   siteUrl: string;
   github: string;
   linkedin: string;
+  resumeUrl: string;
   locale: string;
   avatarImage: string;
 }
@@ -23,6 +24,8 @@ const siteMetadata: SiteMetadata = {
   siteUrl: "https://dandinh.com",
   github: "https://github.com/DennieDan",
   linkedin: "https://www.linkedin.com/in/dandinh-dennie/",
+  resumeUrl:
+    "https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf",
   locale: "en-US",
   avatarImage: "/profile-img.jpg", // Path to your image
 };

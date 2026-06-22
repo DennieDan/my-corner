@@ -3,6 +3,7 @@ import { Playfair_Display, Lato } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { VoiceflowWidget } from "@/components/chat/voiceflow-widget";
+import { SiteNavbar } from "@/components/site-navbar";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${lato.variable} font-sans antialiased`}
       >
+        <SiteNavbar />
         {children}
         <Analytics />
         <VoiceflowWidget />
