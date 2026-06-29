@@ -1,24 +1,24 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
+import Image from "next/image";
 
-import type { TimelineProject } from '@/lib/timeline-data'
-import { parseRichText } from '@/lib/parse-rich-text'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import type { TimelineProject } from "@/lib/timeline-data";
+import { parseRichText } from "@/lib/parse-rich-text";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type TimelineProjectCardProps = {
-  project: TimelineProject
-  className?: string
-}
+  project: TimelineProject;
+  className?: string;
+};
 
 function TimelineProjectCard({ project, className }: TimelineProjectCardProps) {
   return (
     <Card
       className={cn(
-        'gap-0 overflow-hidden rounded-[10px] border-[#7a9e8e]/25 bg-white/80 py-0 shadow-none transition-shadow duration-200 ease-out hover:border-[#7a9e8e]/40 hover:shadow-[0_8px_24px_-8px_rgba(122,158,142,0.28)]',
+        "gap-0 overflow-hidden rounded-[10px] border-[#7a9e8e]/25 bg-white/80 py-0 shadow-none transition-shadow duration-200 ease-out hover:border-[#7a9e8e]/40 hover:shadow-[0_16px_40px_-10px_rgba(74,93,84,1)]",
         className,
       )}
     >
@@ -43,7 +43,7 @@ function TimelineProjectCard({ project, className }: TimelineProjectCardProps) {
               <h4 className="font-serif text-lg font-semibold text-[#4a5d54]">
                 {project.title}
               </h4>
-              {project.status === 'ongoing' && (
+              {project.status === "ongoing" && (
                 <Badge
                   variant="outline"
                   className="border-[#7a9e8e]/40 bg-[#7a9e8e]/10 text-xs text-[#527063]"
@@ -99,7 +99,11 @@ function TimelineProjectCard({ project, className }: TimelineProjectCardProps) {
                     asChild
                     className="border-[#7a9e8e]/35 bg-[#d4e8de] text-[#4a5d54] hover:bg-[#c5ddd0] hover:text-[#4a5d54]"
                   >
-                    <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {link.label}
                       <span className="sr-only"> (opens in new tab)</span>
                     </a>
@@ -111,7 +115,7 @@ function TimelineProjectCard({ project, className }: TimelineProjectCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export { TimelineProjectCard }
+export { TimelineProjectCard };
