@@ -1,45 +1,12 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import Image from 'next/image'
 
 import type { TimelineEvent } from '@/lib/timeline-data'
+import { parseRichText } from '@/lib/parse-rich-text'
+import { TimelineProjectCard } from '@/components/timeline-project-card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-
-function parseInlineText(text: string): ReactNode[] {
-  const parts: ReactNode[] = []
-  const regex = /(\*\*[^*]+\*\*|_[^_]+_)/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index))
-    }
-    const token = match[0]
-    if (token.startsWith('**')) {
-      parts.push(
-        <strong key={match.index} className="font-semibold text-[#4a5d54]">
-          {token.slice(2, -2)}
-        </strong>,
-      )
-    } else {
-      parts.push(
-        <em key={match.index} className="italic">
-          {token.slice(1, -1)}
-        </em>,
-      )
-    }
-    lastIndex = match.index + token.length
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex))
-  }
-
-  return parts.length > 0 ? parts : [text]
-}
 
 type TimelineEventContentProps = {
   event: TimelineEvent
@@ -50,7 +17,7 @@ function TimelineEventContent({ event }: TimelineEventContentProps) {
     <div className="space-y-4">
       <div className="space-y-3">
         <h3 className="font-serif text-xl font-semibold text-[#4a5d54]">
-          {parseInlineText(event.heading)}
+          {parseRichText(event.heading)}
         </h3>
       </div>
 
@@ -59,7 +26,7 @@ function TimelineEventContent({ event }: TimelineEventContentProps) {
           key={`${event.id}-p${index}`}
           className="text-sm leading-relaxed text-[#5a6b62]"
         >
-          {parseInlineText(paragraph)}
+          {parseRichText(paragraph)}
         </p>
       ))}
 
@@ -96,6 +63,14 @@ function TimelineEventContent({ event }: TimelineEventContentProps) {
         </div>
       )}
 
+      {event.projects && event.projects.length > 0 && (
+        <div className="space-y-4 pt-1">
+          {event.projects.map((project) => (
+            <TimelineProjectCard key={project.title} project={project} />
+          ))}
+        </div>
+      )}
+
       {event.links && event.links.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-1">
           {event.links.map((link) => (
@@ -118,4 +93,4 @@ function TimelineEventContent({ event }: TimelineEventContentProps) {
   )
 }
 
-export { TimelineEventContent, parseInlineText }
+export { TimelineEventContent }

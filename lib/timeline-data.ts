@@ -9,6 +9,17 @@ export type TimelineImage = {
   credit?: string;
 };
 
+export type TimelineProject = {
+  title: string;
+  thumbnail?: { src: string; alt: string };
+  objectives: string;
+  userGuide?: string | null;
+  suggestedQuestions?: string[];
+  techStacks: string[];
+  links: TimelineLink[];
+  status?: "ongoing";
+};
+
 export type TimelineEvent = {
   id: string;
   date: string;
@@ -17,6 +28,7 @@ export type TimelineEvent = {
   heading: string;
   content?: string[];
   images?: TimelineImage[];
+  projects?: TimelineProject[];
   links?: TimelineLink[];
 };
 
@@ -42,14 +54,26 @@ export const timelineEvents: TimelineEvent[] = [
     content: [
       "At APTECH, I designed my first frontend static app using AngularJS and jQuery. I was very stressed, I didn't like it.",
     ],
-    links: [
+    projects: [
       {
-        label: "View Frontend",
-        href: "https://denniedan.github.io/Group2_T1.2208.M0_Eproject1/",
-      },
-      {
-        label: "GitHub Repo",
-        href: "https://github.com/DennieDan/Group2_T1.2208.M0_Eproject1",
+        title: "Maru Dry Fruit Store",
+        thumbnail: {
+          src: "/images/projects/frontend_thumbnail.png",
+          alt: "Maru Dry Fruit Store e-commerce website",
+        },
+        objectives:
+          "This is an end-of-course Frontend Project that I built an e-commerce website, supporting listing products, showing product details, adding items to cart and checking out.",
+        techStacks: ["AngularJS", "jQuery"],
+        links: [
+          {
+            label: "View Frontend",
+            href: "https://denniedan.github.io/Group2_T1.2208.M0_Eproject1/",
+          },
+          {
+            label: "GitHub Repo",
+            href: "https://github.com/DennieDan/Group2_T1.2208.M0_Eproject1",
+          },
+        ],
       },
     ],
   },
@@ -119,7 +143,7 @@ export const timelineEvents: TimelineEvent[] = [
     id: "2025-06",
     date: "June 2025",
     dateTime: "2025-06",
-    tags: ["😚", "AI Agents"],
+    tags: ["😚", "AI Agents", "GEN2050Y"],
     heading: "Work with AI Agents at Cyber Sierra",
     content: [
       "I did a 6-month internship at Cyber Sierra as Backend Engineer. I learned AI technologies and built workflow automation as well as agents",
@@ -131,14 +155,50 @@ export const timelineEvents: TimelineEvent[] = [
         credit: "Cyber Sierra",
       },
     ],
-    links: [
+    projects: [
       {
-        label: "View my Data Analytics Chatbot",
-        href: "https://data-analyzer-ybzy.onrender.com",
+        title: "Data Analytics Chatbot",
+        thumbnail: {
+          src: "/images/projects/data-app_thumbnail.png",
+          alt: "Data Analytics Chatbot interface",
+        },
+        objectives:
+          "Sometimes, writing Python codes, R codes to plot and explore a dataset are troublesome to some people who are not familiar with programming. The Chatbot integrates PandasAI with LLM to assist data analysis tasks including insights, plotting, etc.",
+        userGuide:
+          "Upload a dataset, or use this sample [Titanic dataset](https://github.com/DennieDan/data-app/blob/master/Titanic.csv). Give any required command to the chatbot. Please refer to the GitHub Repo below for more the visualized guide.",
+        techStacks: ["PandasAI", "Python", "Streamlit"],
+        links: [
+          {
+            label: "View my Data Analytics Chatbot",
+            href: "https://data-analyzer-ybzy.onrender.com",
+          },
+          {
+            label: "GitHub Repo",
+            href: "https://github.com/DennieDan/data-app",
+          },
+        ],
       },
       {
-        label: "GitHub Repo",
-        href: "https://github.com/DennieDan/data-app",
+        title: "GEN2050Y Mentoring Guidebook",
+        thumbnail: {
+          src: "/images/projects/gen2050y_guidebook.png",
+          alt: "GEN2050Y Mentoring Guidebook",
+        },
+        objectives:
+          "Mentoring Primary and Secondary students may be not easy for some people, especially those who have not tutoring youngers before. GEN2050 curriculum offers up to 5 modules of necessary skills and 1 tutorial to equip prospective mentors with essential tips. However, I find the content of modules on Canvas are somewhat theoretical and does not guide mentors in any real scenarios, while 1 tutorial is rather not enough for our tutors to convey everything.",
+        userGuide:
+          "Gathering my team's experience, I compile it into the Mentoring Guidebook. This is a centralized location with essential tips, and even templates for sessions' proposals.",
+        techStacks: ["MarkBind"],
+        links: [
+          {
+            label: "View my Guidebook",
+            href: "https://denniedan.github.io/guidebook/index.html",
+          },
+          {
+            label: "GitHub Repo",
+            href: "https://github.com/DennieDan/guidebook",
+          },
+        ],
       },
     ],
   },
@@ -164,14 +224,32 @@ export const timelineEvents: TimelineEvent[] = [
     content: [
       "The agent classifies an input item to corresponding Harmonized System Codes (HS-Code), based on the _Singapore Trade Classification, Customs, and Excise Duties 2022_",
     ],
-    links: [
+    projects: [
       {
-        label: "View app",
-        href: "https://classifier-agent.onrender.com/ui/",
-      },
-      {
-        label: "GitHub Repo",
-        href: "https://github.com/DennieDan/classifier-agent",
+        title: "Autonomous Regulatory Auditor Agent (ARAAg)",
+        thumbnail: {
+          src: "/images/projects/araag_thumbnail.png",
+          alt: "Autonomous Regulatory Auditor Agent interface",
+        },
+        objectives:
+          "Products importing to and exporting from Singapore under Singapore Customs are required to be classified into Harmonized System Code (HS-Code), following the [Singapore Trade Classification, Customs, and Excise Duties 2022](https://file.go.gov.sg/stcced2022.pdf) document. Manually searching and scanning a 700-page document is a tedious work for business with mutliple categories of products. This agent uses RAG to classify products into HS-Code.",
+        userGuide:
+          "Pick the corresponding LLM provider and model that you want, please follow the instructions. Input the description of the product that you want to search for HS-Code, be as detailed as possible.",
+        suggestedQuestions: [
+          "What is the HS-Code of Coconut Candy with rice paper wrapper?",
+          "What is the HS-Code of gold necklace with a silver pendant?",
+        ],
+        techStacks: ["Python", "LangGraph", "LangChain", "ChromaDB"],
+        links: [
+          {
+            label: "View app",
+            href: "https://classifier-agent.dandinh.net/ui/",
+          },
+          {
+            label: "GitHub Repo",
+            href: "https://github.com/DennieDan/classifier-agent",
+          },
+        ],
       },
     ],
   },
@@ -181,5 +259,27 @@ export const timelineEvents: TimelineEvent[] = [
     dateTime: "2026-06",
     tags: ["passionate", "infrastructure"],
     heading: "Learn AWS Infrastructure",
+    projects: [
+      {
+        title: "NUS Gym Crowd Prediction",
+        status: "ongoing",
+        objectives:
+          "One of the best perks being a staff and student at NUS is using free Gyms. However, due to the substantial increase of number of students, NUS Gyms are recently very crowded, even at 8AM or during weekends. Our inclusive uNivUS app provides the Crowd Insight feature, which show the current occupancy of gym. Yet, it is not helpful for planning your day with gym. What if I want to go to gym at 3PM tomorrow but wondering if it is crowded?",
+        userGuide: null,
+        techStacks: [
+          "AWS Lambda",
+          "Amazon EventBridge",
+          "Scikit Learn",
+          "Seaborn",
+          "Open-Meteo",
+        ],
+        links: [
+          {
+            label: "GitHub Repo",
+            href: "https://github.com/gym-crowd-org",
+          },
+        ],
+      },
+    ],
   },
 ];
