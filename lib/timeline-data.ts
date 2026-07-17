@@ -263,6 +263,10 @@ export const timelineEvents: TimelineEvent[] = [
       {
         title: "NUS Gym Crowd Prediction",
         status: "ongoing",
+        thumbnail: {
+          src: "/images/projects/gym-crowd-prediction_thumbnail.png",
+          alt: "NUS Gym Crowd Prediction interface",
+        },
         objectives:
           "One of the best perks being a staff and student at NUS is using free Gyms. However, due to the substantial increase of number of students, NUS Gyms are recently very crowded, even at 8AM or during weekends. Our inclusive uNivUS app provides the Crowd Insight feature, which show the current occupancy of gym. Yet, it is not helpful for planning your day with gym. What if I want to go to gym at 3PM tomorrow but wondering if it is crowded?",
         userGuide: null,
@@ -274,6 +278,10 @@ export const timelineEvents: TimelineEvent[] = [
           "Open-Meteo",
         ],
         links: [
+          {
+            label: "View app",
+            href: "https://gym-crowd-app.vercel.app",
+          },
           {
             label: "GitHub Repo",
             href: "https://github.com/gym-crowd-org",
