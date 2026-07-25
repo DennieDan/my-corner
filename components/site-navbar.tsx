@@ -15,14 +15,22 @@ export function SiteNavbar() {
           {siteMetadata.title}
         </Link>
 
-        <a
-          href={siteMetadata.resumeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-full border border-[#7a9e8e]/30 bg-white/70 px-5 py-2 font-sans text-sm font-medium tracking-wide text-[#4a5d54] shadow-sm transition-[color,background-color,border-color,box-shadow] hover:border-[#7a9e8e]/50 hover:bg-white hover:text-[#7a9e8e] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a9e8e]/45 focus-visible:ring-offset-2"
-        >
-          Resume
-        </a>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link
+            href="/dennie"
+            className="font-sans text-sm font-medium tracking-wide text-[#4a5d54] transition-colors hover:text-[#7a9e8e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a9e8e]/45 focus-visible:ring-offset-2"
+          >
+            Dennie Chatbot
+          </Link>
+          <a
+            href={siteMetadata.resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border border-[#7a9e8e]/30 bg-white/70 px-5 py-2 font-sans text-sm font-medium tracking-wide text-[#4a5d54] shadow-sm transition-[color,background-color,border-color,box-shadow] hover:border-[#7a9e8e]/50 hover:bg-white hover:text-[#7a9e8e] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a9e8e]/45 focus-visible:ring-offset-2"
+          >
+            Resume
+          </a>
+        </div>
       </nav>
     </header>
   );

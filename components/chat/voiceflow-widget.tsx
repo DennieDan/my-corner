@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import Link from "next/link";
 import { FormExtension } from "@/components/chat/form-extension";
 import { Button } from "../ui/button";
 import {
@@ -13,8 +14,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { TrashIcon } from "lucide-react";
+import { InfoIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 function getProjectId(): string {
   return process.env.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID ?? "";
@@ -130,6 +132,12 @@ function destroyVoiceflowChat(): void {
   }
 }
 
+function directChatbotInfoCard(router: ReturnType<typeof useRouter>): void {
+  window.voiceflow.chat.close();
+  // redirect to /dennie
+  router.push("/dennie");
+}
+
 async function resetVoiceflowChat(): Promise<void> {
   const oldUserId = getUserId();
   if (!oldUserId) {
@@ -154,6 +162,7 @@ export function VoiceflowWidget() {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (VOICEFLOW_DEBUG) {
@@ -236,14 +245,30 @@ export function VoiceflowWidget() {
         }}
       />
       {isWidgetOpen && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="fixed bottom-6 right-20 z-[2147483647] shadow-md bg-red-400 text-white hover:bg-red-900 hover:text-white h-10"
-          onClick={() => setIsClearConfirmOpen(true)}
-        >
-          <TrashIcon className="size-4" /> Clear chat history
-        </Button>
+        <div className="fixed bottom-6 right-20 z-[2147483647] flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-10 border-[#7a9e8e]/35 bg-white/95 text-[#4a5d54] shadow-md hover:bg-white hover:text-[#7a9e8e]"
+            // asChild
+            onClick={() => directChatbotInfoCard(router)}
+          >
+            {/* <Link href="/dennie" aria-label="Dennie chatbot info card">
+              <InfoIcon className="size-4" />
+              Chatbot Info Card
+            </Link> */}
+            <InfoIcon className="size-4" />
+            Chatbot Info Card
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-10 bg-red-400 text-white shadow-md hover:bg-red-900 hover:text-white"
+            onClick={() => setIsClearConfirmOpen(true)}
+          >
+            <TrashIcon className="size-4" /> Clear chat history
+          </Button>
+        </div>
       )}
       <AlertDialog
         open={isClearConfirmOpen}
