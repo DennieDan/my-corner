@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Lato } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { VoiceflowWidget } from "@/components/chat/voiceflow-widget";
+// import { VoiceflowWidget } from "@/components/cxxhat/voiceflow-widget";
 import { SiteNavbar } from "@/components/site-navbar";
 
 const playfair = Playfair_Display({
@@ -46,7 +46,7 @@ export default function RootLayout({
         <SiteNavbar />
         {children}
         <Analytics />
-        <VoiceflowWidget />
+        {/* <VoiceflowWidget /> */}
       </body>
     </html>
   );
