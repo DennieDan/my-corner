@@ -1,0 +1,14 @@
+{
+  "metadataAttributes": {
+    "sourceId": { "value": { "type": "STRING", "stringValue": "experience:tuturuuu" }, "includeForEmbedding": true },
+    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:experience", "experience:tuturuuu"] }, "includeForEmbedding": true },
+    "title": { "value": { "type": "STRING", "stringValue": "Dan's external contributor experience at Tuturuuu" }, "includeForEmbedding": true },
+    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://github.com/tutur3u/platform" }, "includeForEmbedding": false },
+    "topic": { "value": { "type": "STRING", "stringValue": "experience" }, "includeForEmbedding": true },
+    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
+    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
+    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
+    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
+    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
+  }
+}

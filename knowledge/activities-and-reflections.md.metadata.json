@@ -1,0 +1,14 @@
+{
+  "metadataAttributes": {
+    "sourceId": { "value": { "type": "STRING", "stringValue": "personal:activities-and-reflections" }, "includeForEmbedding": true },
+    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["timeline:2026-02", "personal:strengths", "personal:learning-reflections"] }, "includeForEmbedding": true },
+    "title": { "value": { "type": "STRING", "stringValue": "Dan's public activities, strengths, and learning reflections" }, "includeForEmbedding": true },
+    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://dandinh.net" }, "includeForEmbedding": false },
+    "topic": { "value": { "type": "STRING", "stringValue": "activities-reflections" }, "includeForEmbedding": true },
+    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
+    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
+    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
+    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
+    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
+  }
+}

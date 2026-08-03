@@ -185,7 +185,7 @@ data: {"code":"UPSTREAM_UNAVAILABLE","message":"Dennie is temporarily unavailabl
 
 ### Phase 0 - Confirm product, privacy, and evaluation requirements (complete)
 
-Approved requirements are recorded in `docs/phase-0-product-requirements.md`; the approved baseline contains 67 questions in `evaluations/questions.jsonl`.
+Approved requirements are recorded in `docs/phase-0-product-requirements.md`; the Phase 0 baseline contains 67 questions in `evaluations/questions.jsonl`. Six owner-approved Phase 2 coverage cases bring the current bank to 73 questions.
 
 #### Work
 
@@ -256,7 +256,9 @@ Approved requirements are recorded in `docs/phase-0-product-requirements.md`; th
 
 ---
 
-### Phase 2 - Build the knowledge corpus
+### Phase 2 - Build the knowledge corpus (complete)
+
+Completed on 3 August 2026. Fourteen focused corpus documents and matching Bedrock metadata sidecars were reviewed and approved by Dan. Structural validation confirms coverage for every source hint in the 73-question evaluation bank, every source has provenance and a canonical citation destination, and the approved-only ingestion gate passes. Owner decisions are recorded in `docs/phase-2-owner-review.md`.
 
 #### Work
 

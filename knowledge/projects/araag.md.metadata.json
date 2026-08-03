@@ -1,0 +1,14 @@
+{
+  "metadataAttributes": {
+    "sourceId": { "value": { "type": "STRING", "stringValue": "project:araag" }, "includeForEmbedding": true },
+    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:projects", "timeline:2026-03"] }, "includeForEmbedding": true },
+    "title": { "value": { "type": "STRING", "stringValue": "Autonomous Regulatory Auditor Agent (ARAAg)" }, "includeForEmbedding": true },
+    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://classifier-agent.dandinh.net/ui/" }, "includeForEmbedding": false },
+    "topic": { "value": { "type": "STRING", "stringValue": "project-rag-ai" }, "includeForEmbedding": true },
+    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
+    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
+    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
+    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
+    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
+  }
+}

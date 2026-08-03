@@ -1,0 +1,14 @@
+{
+  "metadataAttributes": {
+    "sourceId": { "value": { "type": "STRING", "stringValue": "achievements:leadership-and-awards" }, "includeForEmbedding": true },
+    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:awards", "resume:leadership"] }, "includeForEmbedding": true },
+    "title": { "value": { "type": "STRING", "stringValue": "Dan's leadership and awards" }, "includeForEmbedding": true },
+    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf" }, "includeForEmbedding": false },
+    "topic": { "value": { "type": "STRING", "stringValue": "leadership-awards" }, "includeForEmbedding": true },
+    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
+    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
+    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
+    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
+    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
+  }
+}

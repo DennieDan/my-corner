@@ -49,12 +49,13 @@ Deployment changes AWS resources and may incur charges. Review the synthesized t
 After copying variable names from `infrastructure/.env.example` into your local shell or an untracked environment file:
 
 ```bash
+npm run knowledge:validate
 npm run knowledge:upload
 npm run knowledge:sync
 AGENT_API_URL=https://example.test/v1/chat npm run evaluate
 ```
 
-The upload command sends Markdown and Bedrock metadata sidecars under `knowledge/` to the configured private bucket and prefix. The sync command starts a Bedrock Knowledge Base ingestion job and waits for completion. Evaluation responses are written under the ignored `evaluations/results/` directory.
+The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The sync command starts a Bedrock Knowledge Base ingestion job and waits for completion. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
 ## Environment variable contract
 
