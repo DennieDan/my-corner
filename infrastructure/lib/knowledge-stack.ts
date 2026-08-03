@@ -175,12 +175,6 @@ export class KnowledgeStack extends Stack {
           type: "VECTOR",
           vectorKnowledgeBaseConfiguration: {
             embeddingModelArn,
-            embeddingModelConfiguration: {
-              bedrockEmbeddingModelConfiguration: {
-                dimensions: EMBEDDING_DIMENSIONS,
-                embeddingDataType: "FLOAT32",
-              },
-            },
           },
         },
         storageConfiguration: {

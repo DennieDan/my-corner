@@ -19,8 +19,8 @@
     "deploy:production": "cdk deploy --all -c environment=production",
     "knowledge:validate": "node --import tsx scripts/validate-knowledge.ts",
     "knowledge:validate:approved": "node --import tsx scripts/validate-knowledge.ts --require-approved",
-    "knowledge:upload": "node --import tsx scripts/upload-knowledge.ts",
-    "knowledge:sync": "node --import tsx scripts/sync-knowledge.ts"
+    "knowledge:upload": "node --env-file .env.local --import tsx scripts/upload-knowledge.ts",
+    "knowledge:sync": "node --env-file .env.local --import tsx scripts/sync-knowledge.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent": "^3.922.0",
