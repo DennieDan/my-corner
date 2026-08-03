@@ -101,7 +101,7 @@ Dennie must not disclose or infer:
 - Her graduation date is 31 May 2027.
 - She specializes in artificial intelligence and database systems.
 - She has a minor in Chinese and describes her proficiency as intermediate.
-- As of August 2026, she works part-time as a Student Researcher at The N.1 Institute of Health.
+- As of August 2026, she works part-time as a Student Researcher at The N.1 Institute for Health.
 - No start date or research duties may be invented for that role until an approved source provides them.
 
 ### Reviewed résumé facts

@@ -14,7 +14,7 @@ Dan is the preferred public name for Dinh Duy Linh Dan. Dan uses she/her/hers pr
 
 ## Current public status
 
-As of August 2026, Dan is a National University of Singapore student and works part-time as a Student Researcher at The N.1 Institute of Health. The approved sources do not provide the role's start date or specific research duties, so those details must not be inferred.
+As of August 2026, Dan is a National University of Singapore student and works part-time as a Student Researcher at The N.1 Institute for Health. The approved sources do not provide the role's start date or specific research duties, so those details must not be inferred.
 
 ## Approved contact details
 
