@@ -1,14 +1,1 @@
-{
-  "metadataAttributes": {
-    "sourceId": { "value": { "type": "STRING", "stringValue": "project:gen2050y-guidebook" }, "includeForEmbedding": true },
-    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:projects"] }, "includeForEmbedding": true },
-    "title": { "value": { "type": "STRING", "stringValue": "GEN2050Y Mentoring Guidebook project" }, "includeForEmbedding": true },
-    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://denniedan.github.io/guidebook/index.html" }, "includeForEmbedding": false },
-    "topic": { "value": { "type": "STRING", "stringValue": "project-education" }, "includeForEmbedding": true },
-    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
-    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
-    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
-    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
-    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
-  }
-}
+{"metadataAttributes":{"sourceId":{"value":{"type":"STRING","stringValue":"project:gen2050y-guidebook"}},"aliases":{"value":{"type":"STRING_LIST","stringListValue":["resume:projects"]}},"title":{"value":{"type":"STRING","stringValue":"GEN2050Y Mentoring Guidebook project"}},"canonicalUrl":{"value":{"type":"STRING","stringValue":"https://denniedan.github.io/guidebook/index.html"}},"topic":{"value":{"type":"STRING","stringValue":"project-education"}},"owner":{"value":{"type":"STRING","stringValue":"Dan"}},"lastReviewedAt":{"value":{"type":"STRING","stringValue":"2026-08-03"}},"visibility":{"value":{"type":"STRING","stringValue":"public"}},"sensitivity":{"value":{"type":"STRING","stringValue":"public-safe"}},"reviewStatus":{"value":{"type":"STRING","stringValue":"approved"}}}}

@@ -7,7 +7,10 @@ export const repositoryDirectory = path.resolve(
   "../..",
 );
 export const knowledgeDirectory = path.join(repositoryDirectory, "knowledge");
-export const registryPath = path.join(knowledgeDirectory, "metadata/source-registry.json");
+export const registryPath = path.join(
+  knowledgeDirectory,
+  "metadata/source-registry.json",
+);
 
 type ReviewStatus = "pending-owner-review" | "approved";
 
@@ -46,16 +49,32 @@ function assertString(value: unknown, label: string): asserts value is string {
   }
 }
 
-function assertStringArray(value: unknown, label: string): asserts value is string[] {
-  if (!Array.isArray(value) || value.some((item) => typeof item !== "string" || item === "")) {
+function assertStringArray(
+  value: unknown,
+  label: string,
+): asserts value is string[] {
+  if (
+    !Array.isArray(value) ||
+    value.some((item) => typeof item !== "string" || item === "")
+  ) {
     throw new Error(`${label} must be an array of non-empty strings`);
   }
 }
 
-export async function loadAndValidateKnowledge(options: { requireApproved?: boolean } = {}) {
-  const raw = JSON.parse(await readFile(registryPath, "utf8")) as Partial<SourceRegistry>;
-  if (raw.schemaVersion !== 1 || !Array.isArray(raw.sources) || raw.sources.length === 0) {
-    throw new Error("source-registry.json must use schemaVersion 1 and contain sources");
+export async function loadAndValidateKnowledge(
+  options: { requireApproved?: boolean } = {},
+) {
+  const raw = JSON.parse(
+    await readFile(registryPath, "utf8"),
+  ) as Partial<SourceRegistry>;
+  if (
+    raw.schemaVersion !== 1 ||
+    !Array.isArray(raw.sources) ||
+    raw.sources.length === 0
+  ) {
+    throw new Error(
+      "source-registry.json must use schemaVersion 1 and contain sources",
+    );
   }
 
   const sourceIds = new Set<string>();
@@ -74,10 +93,16 @@ export async function loadAndValidateKnowledge(options: { requireApproved?: bool
     assertString(source.lastReviewedAt, `${label}.lastReviewedAt`);
     assertStringArray(source.provenance, `${label}.provenance`);
 
-    if (source.visibility !== "public" || source.sensitivity !== "public-safe") {
+    if (
+      source.visibility !== "public" ||
+      source.sensitivity !== "public-safe"
+    ) {
       throw new Error(`${label} must be public and public-safe`);
     }
-    if (source.reviewStatus !== "pending-owner-review" && source.reviewStatus !== "approved") {
+    if (
+      source.reviewStatus !== "pending-owner-review" &&
+      source.reviewStatus !== "approved"
+    ) {
       throw new Error(`${label}.reviewStatus is invalid`);
     }
     if (options.requireApproved && source.reviewStatus !== "approved") {
@@ -97,14 +122,23 @@ export async function loadAndValidateKnowledge(options: { requireApproved?: bool
     await access(metadataPath);
 
     const document = await readFile(documentPath, "utf8");
-    for (const expected of [source.sourceId, source.title, source.canonicalUrl, source.lastReviewedAt]) {
+    for (const expected of [
+      source.sourceId,
+      source.title,
+      source.canonicalUrl,
+      source.lastReviewedAt,
+    ]) {
       if (!document.includes(expected)) {
-        throw new Error(`${source.path} does not contain required value: ${expected}`);
+        throw new Error(
+          `${source.path} does not contain required value: ${expected}`,
+        );
       }
     }
 
-    if ((await stat(metadataPath)).size > 10 * 1024) {
-      throw new Error(`${source.path}.metadata.json exceeds Bedrock's 10 KB limit`);
+    if ((await stat(metadataPath)).size > 1024) {
+      throw new Error(
+        `${source.path}.metadata.json exceeds Bedrock's 1 KB limit`,
+      );
     }
     const metadata = JSON.parse(await readFile(metadataPath, "utf8")) as {
       metadataAttributes?: Record<string, MetadataAttribute>;
@@ -113,7 +147,18 @@ export async function loadAndValidateKnowledge(options: { requireApproved?: bool
     if (!attributes || typeof attributes !== "object") {
       throw new Error(`${source.path}.metadata.json has no metadataAttributes`);
     }
-    for (const key of ["sourceId", "aliases", "title", "canonicalUrl", "topic", "owner", "lastReviewedAt", "visibility", "sensitivity", "reviewStatus"]) {
+    for (const key of [
+      "sourceId",
+      "aliases",
+      "title",
+      "canonicalUrl",
+      "topic",
+      "owner",
+      "lastReviewedAt",
+      "visibility",
+      "sensitivity",
+      "reviewStatus",
+    ]) {
       if (!(key in attributes)) {
         throw new Error(`${source.path}.metadata.json is missing ${key}`);
       }
@@ -135,20 +180,31 @@ export async function loadAndValidateKnowledge(options: { requireApproved?: bool
     };
     for (const [key, expected] of Object.entries(expectedStrings)) {
       const attribute = attributes[key];
-      if (attribute.value?.type !== "STRING" || attribute.value.stringValue !== expected) {
-        throw new Error(`${source.path}.metadata.json ${key} does not match the registry`);
+      if (
+        attribute.value?.type !== "STRING" ||
+        attribute.value.stringValue !== expected
+      ) {
+        throw new Error(
+          `${source.path}.metadata.json ${key} does not match the registry`,
+        );
       }
     }
     const aliases = attributes.aliases;
     if (
-      aliases.value?.type !== "STRING_LIST"
-      || JSON.stringify(aliases.value.stringListValue) !== JSON.stringify(source.aliases)
+      aliases.value?.type !== "STRING_LIST" ||
+      JSON.stringify(aliases.value.stringListValue) !==
+        JSON.stringify(source.aliases)
     ) {
-      throw new Error(`${source.path}.metadata.json aliases do not match the registry`);
+      throw new Error(
+        `${source.path}.metadata.json aliases do not match the registry`,
+      );
     }
   }
 
-  const questionsPath = path.join(repositoryDirectory, "evaluations/questions.jsonl");
+  const questionsPath = path.join(
+    repositoryDirectory,
+    "evaluations/questions.jsonl",
+  );
   const questions = (await readFile(questionsPath, "utf8"))
     .split("\n")
     .filter(Boolean)
@@ -159,7 +215,9 @@ export async function loadAndValidateKnowledge(options: { requireApproved?: bool
       .map((hint) => `${question.id}: ${hint}`),
   );
   if (missingAliases.length > 0) {
-    throw new Error(`Evaluation source hints without corpus coverage:\n${missingAliases.join("\n")}`);
+    throw new Error(
+      `Evaluation source hints without corpus coverage:\n${missingAliases.join("\n")}`,
+    );
   }
 
   return raw.sources;

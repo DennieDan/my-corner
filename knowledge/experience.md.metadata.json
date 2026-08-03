@@ -1,14 +1,1 @@
-{
-  "metadataAttributes": {
-    "sourceId": { "value": { "type": "STRING", "stringValue": "experience:cyber-sierra" }, "includeForEmbedding": true },
-    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:experience", "resume:experience:cyber-sierra", "timeline:2025-06"] }, "includeForEmbedding": true },
-    "title": { "value": { "type": "STRING", "stringValue": "Dan's backend engineering experience at Cyber Sierra" }, "includeForEmbedding": true },
-    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf" }, "includeForEmbedding": false },
-    "topic": { "value": { "type": "STRING", "stringValue": "experience" }, "includeForEmbedding": true },
-    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
-    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
-    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
-    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
-    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
-  }
-}
+{"metadataAttributes":{"sourceId":{"value":{"type":"STRING","stringValue":"experience:cyber-sierra"}},"aliases":{"value":{"type":"STRING_LIST","stringListValue":["resume:experience","resume:experience:cyber-sierra","timeline:2025-06"]}},"title":{"value":{"type":"STRING","stringValue":"Dan's backend engineering experience at Cyber Sierra"}},"canonicalUrl":{"value":{"type":"STRING","stringValue":"https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf"}},"topic":{"value":{"type":"STRING","stringValue":"experience"}},"owner":{"value":{"type":"STRING","stringValue":"Dan"}},"lastReviewedAt":{"value":{"type":"STRING","stringValue":"2026-08-03"}},"visibility":{"value":{"type":"STRING","stringValue":"public"}},"sensitivity":{"value":{"type":"STRING","stringValue":"public-safe"}},"reviewStatus":{"value":{"type":"STRING","stringValue":"approved"}}}}

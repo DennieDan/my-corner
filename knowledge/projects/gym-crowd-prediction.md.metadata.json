@@ -1,14 +1,1 @@
-{
-  "metadataAttributes": {
-    "sourceId": { "value": { "type": "STRING", "stringValue": "project:gym-crowd-prediction" }, "includeForEmbedding": true },
-    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:projects", "timeline:2026-06"] }, "includeForEmbedding": true },
-    "title": { "value": { "type": "STRING", "stringValue": "NUS Gym Crowd Prediction project" }, "includeForEmbedding": true },
-    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://gym-crowd-app.vercel.app" }, "includeForEmbedding": false },
-    "topic": { "value": { "type": "STRING", "stringValue": "project-cloud-ml" }, "includeForEmbedding": true },
-    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
-    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
-    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
-    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
-    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
-  }
-}
+{"metadataAttributes":{"sourceId":{"value":{"type":"STRING","stringValue":"project:gym-crowd-prediction"}},"aliases":{"value":{"type":"STRING_LIST","stringListValue":["resume:projects","timeline:2026-06"]}},"title":{"value":{"type":"STRING","stringValue":"NUS Gym Crowd Prediction project"}},"canonicalUrl":{"value":{"type":"STRING","stringValue":"https://gym-crowd-app.vercel.app"}},"topic":{"value":{"type":"STRING","stringValue":"project-cloud-ml"}},"owner":{"value":{"type":"STRING","stringValue":"Dan"}},"lastReviewedAt":{"value":{"type":"STRING","stringValue":"2026-08-03"}},"visibility":{"value":{"type":"STRING","stringValue":"public"}},"sensitivity":{"value":{"type":"STRING","stringValue":"public-safe"}},"reviewStatus":{"value":{"type":"STRING","stringValue":"approved"}}}}

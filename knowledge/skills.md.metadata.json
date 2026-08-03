@@ -1,14 +1,1 @@
-{
-  "metadataAttributes": {
-    "sourceId": { "value": { "type": "STRING", "stringValue": "skills:technical" }, "includeForEmbedding": true },
-    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["resume:skills"] }, "includeForEmbedding": true },
-    "title": { "value": { "type": "STRING", "stringValue": "Dan's evidence-backed technical skills" }, "includeForEmbedding": true },
-    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf" }, "includeForEmbedding": false },
-    "topic": { "value": { "type": "STRING", "stringValue": "skills" }, "includeForEmbedding": true },
-    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
-    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
-    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
-    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
-    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
-  }
-}
+{"metadataAttributes":{"sourceId":{"value":{"type":"STRING","stringValue":"skills:technical"}},"aliases":{"value":{"type":"STRING_LIST","stringListValue":["resume:skills"]}},"title":{"value":{"type":"STRING","stringValue":"Dan's evidence-backed technical skills"}},"canonicalUrl":{"value":{"type":"STRING","stringValue":"https://dan-public-drive-520070583275-ap-southeast-1-an.s3.ap-southeast-1.amazonaws.com/Dinh+Duy+Linh+Dan_CV.pdf"}},"topic":{"value":{"type":"STRING","stringValue":"skills"}},"owner":{"value":{"type":"STRING","stringValue":"Dan"}},"lastReviewedAt":{"value":{"type":"STRING","stringValue":"2026-08-03"}},"visibility":{"value":{"type":"STRING","stringValue":"public"}},"sensitivity":{"value":{"type":"STRING","stringValue":"public-safe"}},"reviewStatus":{"value":{"type":"STRING","stringValue":"approved"}}}}

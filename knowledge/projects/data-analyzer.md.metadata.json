@@ -1,14 +1,1 @@
-{
-  "metadataAttributes": {
-    "sourceId": { "value": { "type": "STRING", "stringValue": "project:data-analyzer" }, "includeForEmbedding": true },
-    "aliases": { "value": { "type": "STRING_LIST", "stringListValue": ["project:data-analytics-chatbot", "resume:projects"] }, "includeForEmbedding": true },
-    "title": { "value": { "type": "STRING", "stringValue": "Data Analyzer project" }, "includeForEmbedding": true },
-    "canonicalUrl": { "value": { "type": "STRING", "stringValue": "https://data-analyzer-ybzy.onrender.com" }, "includeForEmbedding": false },
-    "topic": { "value": { "type": "STRING", "stringValue": "project-data-ai" }, "includeForEmbedding": true },
-    "owner": { "value": { "type": "STRING", "stringValue": "Dan" }, "includeForEmbedding": false },
-    "lastReviewedAt": { "value": { "type": "STRING", "stringValue": "2026-08-03" }, "includeForEmbedding": false },
-    "visibility": { "value": { "type": "STRING", "stringValue": "public" }, "includeForEmbedding": false },
-    "sensitivity": { "value": { "type": "STRING", "stringValue": "public-safe" }, "includeForEmbedding": false },
-    "reviewStatus": { "value": { "type": "STRING", "stringValue": "approved" }, "includeForEmbedding": false }
-  }
-}
+{"metadataAttributes":{"sourceId":{"value":{"type":"STRING","stringValue":"project:data-analyzer"}},"aliases":{"value":{"type":"STRING_LIST","stringListValue":["project:data-analytics-chatbot","resume:projects"]}},"title":{"value":{"type":"STRING","stringValue":"Data Analyzer project"}},"canonicalUrl":{"value":{"type":"STRING","stringValue":"https://data-analyzer-ybzy.onrender.com"}},"topic":{"value":{"type":"STRING","stringValue":"project-data-ai"}},"owner":{"value":{"type":"STRING","stringValue":"Dan"}},"lastReviewedAt":{"value":{"type":"STRING","stringValue":"2026-08-03"}},"visibility":{"value":{"type":"STRING","stringValue":"public"}},"sensitivity":{"value":{"type":"STRING","stringValue":"public-safe"}},"reviewStatus":{"value":{"type":"STRING","stringValue":"approved"}}}}
