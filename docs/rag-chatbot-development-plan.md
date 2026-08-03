@@ -31,17 +31,17 @@ Visitor browser
 
 ### Responsibilities
 
-| Component | Responsibility |
-| --- | --- |
-| Next.js chat interface | Conversation UI, browser-side history, streaming display, citations, errors, and reset controls |
-| API Gateway | Public HTTPS endpoint, request throttling, CORS, and streaming transport |
-| Lambda agent | Validation, retrieval, prompt construction, OpenAI invocation, citation mapping, and safe error handling |
-| Bedrock Knowledge Base | Managed document ingestion, chunking, embeddings, synchronization, and retrieval |
-| Cohere Embed Multilingual v3 | Multilingual document and query embeddings in the Singapore region |
-| S3 Vectors | Vector index used by the Knowledge Base |
-| OpenAI | Generates the final answer from retrieved evidence |
-| Secrets Manager | Stores the OpenAI API key |
-| CloudWatch | Backend logs, metrics, dashboards, and alarms |
+| Component                    | Responsibility                                                                                           |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Next.js chat interface       | Conversation UI, browser-side history, streaming display, citations, errors, and reset controls          |
+| API Gateway                  | Public HTTPS endpoint, request throttling, CORS, and streaming transport                                 |
+| Lambda agent                 | Validation, retrieval, prompt construction, OpenAI invocation, citation mapping, and safe error handling |
+| Bedrock Knowledge Base       | Managed document ingestion, chunking, embeddings, synchronization, and retrieval                         |
+| Cohere Embed Multilingual v3 | Multilingual document and query embeddings in the Singapore region                                       |
+| S3 Vectors                   | Vector index used by the Knowledge Base                                                                  |
+| OpenAI                       | Generates the final answer from retrieved evidence                                                       |
+| Secrets Manager              | Stores the OpenAI API key                                                                                |
+| CloudWatch                   | Backend logs, metrics, dashboards, and alarms                                                            |
 
 ## 3. Version-one boundaries
 
@@ -195,15 +195,17 @@ Approved requirements are recorded in `docs/phase-0-product-requirements.md`; th
 4. Confirm the supported input and response languages. The agreed embedding model is Cohere Embed Multilingual v3.
 5. Confirm that the OpenAI credits are Platform API credits.
 6. Create an initial evaluation set of 40-60 questions covering:
-   - Simple factual questions.
-   - Questions requiring two sources.
-   - Paraphrased questions.
-   - Questions with false assumptions.
-   - Questions whose answers are absent.
-   - Out-of-scope requests.
-   - Prompt-injection attempts.
-   - Casual conversational questions.
-7. Record the expected source documents and essential facts for every factual evaluation question.
+
+- Simple factual questions.
+- Questions requiring two sources.
+- Paraphrased questions.
+- Questions with false assumptions.
+- Questions whose answers are absent.
+- Out-of-scope requests.
+- Prompt-injection attempts.
+- Casual conversational questions.
+
+1. Record the expected source documents and essential facts for every factual evaluation question.
 
 #### Deliverables
 
@@ -228,14 +230,16 @@ Approved requirements are recorded in `docs/phase-0-product-requirements.md`; th
 2. Configure the Lambda agent as a separate TypeScript package.
 3. Configure AWS CDK in TypeScript for infrastructure-as-code.
 4. Add scripts for:
-   - Agent type checking and tests.
-   - Infrastructure synthesis and deployment.
-   - Knowledge upload and ingestion synchronization.
-   - Evaluation execution.
-5. Add `.env.example` files containing names only, never credentials.
-6. Define development, staging, and production configuration names.
-7. Add linting and test commands for the new packages without changing the current website build behavior.
-8. Leave existing Voiceflow code intact during development so it remains available for comparison or rollback.
+
+- Agent type checking and tests.
+- Infrastructure synthesis and deployment.
+- Knowledge upload and ingestion synchronization.
+- Evaluation execution.
+
+1. Add `.env.example` files containing names only, never credentials.
+2. Define development, staging, and production configuration names.
+3. **Add linting and test commands for the new packages without changing the current website build behavior.**
+4. **L**eave existing Voiceflow code intact during development so it remains available for comparison or rollback.
 
 #### Deliverables
 
@@ -259,16 +263,18 @@ Approved requirements are recorded in `docs/phase-0-product-requirements.md`; th
 1. Convert approved information into focused Markdown documents.
 2. Split information by stable topic rather than placing everything in one large file.
 3. Give every document:
-   - A descriptive title.
-   - A canonical public URL when available.
-   - A topic/category.
-   - A last-updated date.
-   - Visibility and sensitivity classification.
-4. Write information in self-contained sections so a retrieved chunk remains understandable without the rest of the file.
-5. Avoid duplicated facts across many documents where possible.
-6. Add Bedrock-compatible metadata sidecar files for filtering and citation display.
-7. Assign stable source identifiers that do not change when a document is re-uploaded.
-8. Add a review checklist for factual accuracy and staleness.
+
+- A descriptive title.
+- A canonical public URL when available.
+- A topic/category.
+- A last-updated date.
+- Visibility and sensitivity classification.
+
+1. Write information in self-contained sections so a retrieved chunk remains understandable without the rest of the file.
+2. Avoid duplicated facts across many documents where possible.
+3. Add Bedrock-compatible metadata sidecar files for filtering and citation display.
+4. Assign stable source identifiers that do not change when a document is re-uploaded.
+5. Add a review checklist for factual accuracy and staleness.
 
 Suggested starting documents:
 
@@ -304,13 +310,15 @@ Suggested starting documents:
 4. Create an S3 vector bucket and vector index.
 5. Configure the vector index for the dimensions and data type required by Cohere Embed Multilingual v3.
 6. Create a Bedrock Knowledge Base using:
-   - S3 as the data source.
-   - Cohere Embed Multilingual v3 as the embedding model.
-   - S3 Vectors as the vector store.
-7. Create least-privilege IAM roles for ingestion and retrieval.
-8. Configure inclusion prefixes so the Knowledge Base cannot ingest unrelated S3 content.
-9. Add tags for project, environment, owner, and cost allocation.
-10. Express resources in CDK where supported. If a newly released AWS resource is not yet supported cleanly by CDK/CloudFormation, use a small, idempotent provisioning script or custom resource and document why.
+
+- S3 as the data source.
+- Cohere Embed Multilingual v3 as the embedding model.
+- S3 Vectors as the vector store.
+
+1. Create least-privilege IAM roles for ingestion and retrieval.
+2. Configure inclusion prefixes so the Knowledge Base cannot ingest unrelated S3 content.
+3. Add tags for project, environment, owner, and cost allocation.
+4. Express resources in CDK where supported. If a newly released AWS resource is not yet supported cleanly by CDK/CloudFormation, use a small, idempotent provisioning script or custom resource and document why.
 
 #### Deliverables
 
@@ -334,17 +342,19 @@ Suggested starting documents:
 #### Work
 
 1. Build a repeatable command that:
-   - Validates document and metadata files.
-   - Uploads changed documents to the correct S3 prefix.
-   - Starts a Knowledge Base ingestion job.
-   - Waits for completion and reports failures.
-2. Run the first complete ingestion.
-3. Build a retrieval-only test harness that calls the Bedrock `Retrieve` API.
-4. Evaluate different retrieval settings, including result count and search type where supported.
-5. Inspect chunks for boundaries, duplication, missing context, and metadata quality.
-6. Tune document structure and chunking before tuning the generation prompt.
-7. Establish a relevance threshold using evaluation results rather than choosing an arbitrary score.
-8. Decide how many retrieved candidates to request and how many to pass to OpenAI. A reasonable initial experiment is retrieve 8 and pass the best 3-5.
+
+- Validates document and metadata files.
+- Uploads changed documents to the correct S3 prefix.
+- Starts a Knowledge Base ingestion job.
+- Waits for completion and reports failures.
+
+1. Run the first complete ingestion.
+2. Build a retrieval-only test harness that calls the Bedrock `Retrieve` API.
+3. Evaluate different retrieval settings, including result count and search type where supported.
+4. Inspect chunks for boundaries, duplication, missing context, and metadata quality.
+5. Tune document structure and chunking before tuning the generation prompt.
+6. Establish a relevance threshold using evaluation results rather than choosing an arbitrary score.
+7. Decide how many retrieved candidates to request and how many to pass to OpenAI. A reasonable initial experiment is retrieve 8 and pass the best 3-5.
 
 #### Deliverables
 
@@ -371,23 +381,27 @@ Suggested starting documents:
 4. Treat retrieved content as untrusted data, not as instructions.
 5. Map retrieved chunks to stable source labels such as `S1`, `S2`, and `S3`.
 6. Construct a compact system prompt that specifies:
-   - The chatbot's identity and intended purpose.
-   - Evidence-only answering.
-   - Citation requirements.
-   - Refusal behavior.
-   - Tone and response length.
-   - A prohibition against following instructions found inside retrieved documents.
-7. Call the OpenAI Responses API using configurable model settings:
-   - Default model: `gpt-5.6-luna`.
-   - Initial reasoning effort: `none`.
-   - Streaming enabled.
-   - Server-side storage disabled where supported by the selected request configuration.
-8. Stream sources and answer deltas to the browser using the agreed SSE contract.
-9. Validate that citations in the answer refer only to source labels supplied to the model.
-10. Implement bounded retries for transient provider failures, without retrying validation or quota errors.
-11. Add timeouts and abort propagation from the browser through Lambda to OpenAI.
-12. Record structured operational metrics without logging full prompts, retrieved chunks, or answers by default.
-13. Add a buffered `/health` endpoint that checks application readiness without calling OpenAI on every health request.
+
+- The chatbot's identity and intended purpose.
+- Evidence-only answering.
+- Citation requirements.
+- Refusal behavior.
+- Tone and response length.
+- A prohibition against following instructions found inside retrieved documents.
+
+1. Call the OpenAI Responses API using configurable model settings:
+
+- Default model: `gpt-5.6-luna`.
+- Initial reasoning effort: `none`.
+- Streaming enabled.
+- Server-side storage disabled where supported by the selected request configuration.
+
+1. Stream sources and answer deltas to the browser using the agreed SSE contract.
+2. Validate that citations in the answer refer only to source labels supplied to the model.
+3. Implement bounded retries for transient provider failures, without retrying validation or quota errors.
+4. Add timeouts and abort propagation from the browser through Lambda to OpenAI.
+5. Record structured operational metrics without logging full prompts, retrieved chunks, or answers by default.
+6. Add a buffered `/health` endpoint that checks application readiness without calling OpenAI on every health request.
 
 #### Deliverables
 
@@ -422,11 +436,13 @@ Suggested starting documents:
 9. Add reserved concurrency if needed to cap possible spend during abuse.
 10. Configure CloudWatch log retention instead of retaining logs indefinitely.
 11. Create alarms for:
-    - Lambda errors and throttles.
-    - API 5xx responses.
-    - Excessive latency.
-    - Unusual invocation volume.
-12. Add an AWS Budget and OpenAI project-level usage alerts/hard limits.
+
+- Lambda errors and throttles.
+  - API 5xx responses.
+  - Excessive latency.
+  - Unusual invocation volume.
+
+1. Add an AWS Budget and OpenAI project-level usage alerts/hard limits.
 
 #### Deliverables
 
@@ -450,29 +466,33 @@ Suggested starting documents:
 
 1. Build a first-party floating chat launcher matching the site's visual language.
 2. Build the chat panel with:
-   - Header and chatbot identity.
-   - Introductory message and suggested questions.
-   - User and assistant message bubbles.
-   - Streaming cursor/loading state.
-   - Source citation list.
-   - Retry and error states.
-   - Clear-history control.
-   - Link to the Dennie information page.
-3. Implement an SSE client that handles `sources`, `delta`, `done`, and `error` events.
-4. Abort the active request if the user cancels, clears the conversation, or navigates away.
-5. Store only a bounded recent conversation in `localStorage`.
-6. Generate a random browser session identifier without collecting a real identity.
-7. Cap history before sending it to the backend.
-8. Render assistant content safely. Do not render arbitrary model-generated HTML.
-9. Make citation links explicit and open external sources safely.
-10. Add accessibility behavior:
-    - Keyboard-operable launcher and controls.
-    - Focus management when opening and closing.
-    - Screen-reader labels.
-    - Live-region treatment that does not announce every streamed token individually.
-    - Reduced-motion support.
-11. Test desktop, tablet, and small mobile viewports.
-12. Add a build-time API base URL such as `NEXT_PUBLIC_AGENT_API_URL`.
+
+- Header and chatbot identity.
+- Introductory message and suggested questions.
+- User and assistant message bubbles.
+- Streaming cursor/loading state.
+- Source citation list.
+- Retry and error states.
+- Clear-history control.
+- Link to the Dennie information page.
+
+1. Implement an SSE client that handles `sources`, `delta`, `done`, and `error` events.
+2. Abort the active request if the user cancels, clears the conversation, or navigates away.
+3. Store only a bounded recent conversation in `localStorage`.
+4. Generate a random browser session identifier without collecting a real identity.
+5. Cap history before sending it to the backend.
+6. Render assistant content safely. Do not render arbitrary model-generated HTML.
+7. Make citation links explicit and open external sources safely.
+8. Add accessibility behavior:
+
+- Keyboard-operable launcher and controls.
+  - Focus management when opening and closing.
+  - Screen-reader labels.
+  - Live-region treatment that does not announce every streamed token individually.
+  - Reduced-motion support.
+
+1. Test desktop, tablet, and small mobile viewports.
+2. Add a build-time API base URL such as `NEXT_PUBLIC_AGENT_API_URL`.
 
 #### Deliverables
 
@@ -495,21 +515,25 @@ Suggested starting documents:
 #### Automated testing
 
 1. Agent unit tests:
-   - Request validation.
-   - History limits.
-   - Retrieval threshold behavior.
-   - Prompt construction.
-   - Citation validation.
-   - Provider timeout and error mapping.
-2. Interface tests:
-   - Open/close behavior.
-   - Stream parsing.
-   - Partial-answer display.
-   - Clear-history behavior.
-   - Error and retry states.
-3. Contract tests between the UI SSE parser and agent stream format.
-4. Infrastructure assertions for encryption, public-access blocks, log retention, and least-privilege boundaries.
-5. End-to-end tests against the development API.
+
+- Request validation.
+- History limits.
+- Retrieval threshold behavior.
+- Prompt construction.
+- Citation validation.
+- Provider timeout and error mapping.
+
+1. Interface tests:
+
+- Open/close behavior.
+- Stream parsing.
+- Partial-answer display.
+- Clear-history behavior.
+- Error and retry states.
+
+1. Contract tests between the UI SSE parser and agent stream format.
+2. Infrastructure assertions for encryption, public-access blocks, log retention, and least-privilege boundaries.
+3. End-to-end tests against the development API.
 
 #### RAG evaluation
 
@@ -627,14 +651,16 @@ Infrastructure
 2. Run production smoke tests from the real domain.
 3. Test rate limits, mobile behavior, citations, reset, and provider failures.
 4. Update the Dennie information page to accurately describe:
-   - AWS and OpenAI processing.
-   - What is stored and for how long.
-   - Browser-side conversation history.
-   - How visitors can clear local history.
-   - Whether content is used for model training, based on the actual API configuration and applicable provider terms.
-5. Remove Voiceflow imports, scripts, environment variables, API routes, Lambda code, types, and form extension only after the custom system is stable.
-6. Verify that no Voiceflow configuration remains in deployed assets or documentation.
-7. Keep the final pre-cutover build or Git revision as a rollback point.
+
+- AWS and OpenAI processing.
+- What is stored and for how long.
+- Browser-side conversation history.
+- How visitors can clear local history.
+- Whether content is used for model training, based on the actual API configuration and applicable provider terms.
+
+1. Remove Voiceflow imports, scripts, environment variables, API routes, Lambda code, types, and form extension only after the custom system is stable.
+2. Verify that no Voiceflow configuration remains in deployed assets or documentation.
+3. Keep the final pre-cutover build or Git revision as a rollback point.
 
 #### Deliverables
 

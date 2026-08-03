@@ -10,7 +10,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "agent:build": "npm --prefix agent run build",
+    "agent:check": "npm --prefix agent run check",
+    "agent:test": "npm --prefix agent test",
+    "infra:build": "npm --prefix infrastructure run build",
+    "infra:check": "npm --prefix infrastructure run check",
+    "infra:test": "npm --prefix infrastructure test",
+    "infra:synth": "npm --prefix infrastructure run synth",
+    "infra:deploy": "npm --prefix infrastructure run deploy",
+    "knowledge:upload": "npm --prefix infrastructure run knowledge:upload",
+    "knowledge:sync": "npm --prefix infrastructure run knowledge:sync",
+    "evaluate": "node evaluations/run-evaluation.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
