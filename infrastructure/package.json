@@ -20,7 +20,8 @@
     "knowledge:validate": "node --import tsx scripts/validate-knowledge.ts",
     "knowledge:validate:approved": "node --import tsx scripts/validate-knowledge.ts --require-approved",
     "knowledge:upload": "node --env-file .env.local --import tsx scripts/upload-knowledge.ts",
-    "knowledge:sync": "node --env-file .env.local --import tsx scripts/sync-knowledge.ts"
+    "knowledge:sync": "node --env-file .env.local --import tsx scripts/sync-knowledge.ts",
+    "knowledge:ingest": "node --env-file .env.local --import tsx scripts/ingest-knowledge.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent": "^3.922.0",

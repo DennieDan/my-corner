@@ -25,6 +25,12 @@ The upload command also compares managed `.md` and `.md.metadata.json` objects u
 npm run knowledge:upload -- --delete-obsolete
 ```
 
+After source review, run the complete validation, upload, and Bedrock ingestion workflow with:
+
+```bash
+npm run knowledge:ingest
+```
+
 ## Maintenance checklist
 
 1. Confirm every fact is approved for public release and resolve conflicts using the authority order in `docs/phase-0-product-requirements.md`.

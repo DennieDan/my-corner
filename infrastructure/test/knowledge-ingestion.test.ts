@@ -54,9 +54,11 @@ describe("runKnowledgeIngestion", () => {
     })).resolves.toBe(complete);
 
     expect(getIngestion).toHaveBeenCalledOnce();
+    expect(logger.log).toHaveBeenCalledWith("Ingestion job job-123 final statistics:");
     expect(logger.log).toHaveBeenCalledWith("- Documents scanned: 14");
     expect(logger.log).toHaveBeenCalledWith("- Documents failed: 0");
     expect(logger.log).toHaveBeenCalledWith("Bedrock failure reasons: none reported");
+    expect(logger.log).toHaveBeenCalledWith("Ingestion job job-123 completed successfully.");
   });
 
   it("prints Bedrock failure reasons before failing", async () => {

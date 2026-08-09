@@ -22,6 +22,7 @@
     "knowledge:validate": "npm --prefix infrastructure run knowledge:validate",
     "knowledge:upload": "npm --prefix infrastructure run knowledge:upload",
     "knowledge:sync": "npm --prefix infrastructure run knowledge:sync",
+    "knowledge:ingest": "npm --prefix infrastructure run knowledge:ingest",
     "evaluate": "node evaluations/run-evaluation.mjs"
   },
   "dependencies": {

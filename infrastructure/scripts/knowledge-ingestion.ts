@@ -78,7 +78,7 @@ const statisticLabels: Array<[keyof IngestionJobStatistics, string]> = [
 ];
 
 function reportFinalJob(job: IngestionJobSnapshot, logger: Logger): void {
-  logger.log("Ingestion statistics:");
+  logger.log(`Ingestion job ${job.ingestionJobId ?? "unknown"} final statistics:`);
   for (const [key, label] of statisticLabels) {
     logger.log(`- ${label}: ${job.statistics?.[key] ?? "not reported"}`);
   }
@@ -147,5 +147,6 @@ export async function runKnowledgeIngestion({
     );
   }
 
+  logger.log(`Ingestion job ${ingestionJobId} completed successfully.`);
   return job;
 }
