@@ -337,6 +337,21 @@ Suggested starting documents:
 - An authorized test identity can call `Retrieve`.
 - An unauthorized identity cannot read documents, vectors, or Knowledge Base results.
 
+#### Completion record
+
+- Deployment: 2026-08-03 in AWS account `520070583275`, region `ap-southeast-1`. The stack was created at `2026-08-03T07:34:37Z`, last updated at `2026-08-03T09:24:52Z`, and was `UPDATE_COMPLETE` when verified.
+- Stack: `Dennie-development-Knowledge`.
+- Bedrock Knowledge Base: `0DHVJWVXZG`.
+- Bedrock data source: `ENAGNFLKA3`.
+- Successful ingestion: job `KPEBF5MNVL` completed with 14 documents and 14 metadata documents scanned, one modified document indexed, zero failed documents, and no failure reasons. This incremental job completed the corpus after the preceding ingestion had indexed the other 13 documents.
+- Retrieval smoke test: an authorized `Retrieve` request for `What projects has Dan worked on?` succeeded and returned 10 results. The results included `activities-and-reflections.md`, `projects/data-analyzer.md`, and `projects/dennie-my-corner.md`. Retrieval ranking and top-five relevance remain Phase 4 evaluation work.
+- Negative authorization test: an unsigned `Retrieve` request was denied with `MissingAuthenticationTokenException`, confirming that unauthenticated callers cannot retrieve Knowledge Base results. No temporary authenticated-but-unauthorized IAM principal was created for this test.
+- Configuration deviations and implementation notes:
+  - The primary region, embedding model, 1,024-dimension `float32` vectors, S3 data source, and S3 Vectors store match the plan.
+  - Resources use `Project=Learning`, `Name=my-corner-knowledge-base`, and the inherited `Environment=development` tag. Separate owner and cost-allocation tags from the original plan were not added.
+  - Metadata sidecars are limited to 1,024 bytes for S3 Vectors. `includeForEmbedding` was removed because the same metadata already appears in each Markdown header and prepending it caused one Cohere input to exceed the model's 2,048-character request limit.
+  - All retrieval infrastructure was expressed with CDK/CloudFormation; no custom resource or separate provisioning script was required.
+
 ---
 
 ### Phase 4 - Implement ingestion and validate retrieval
