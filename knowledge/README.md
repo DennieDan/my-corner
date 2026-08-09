@@ -19,6 +19,12 @@ npm run knowledge:validate
 
 All new or changed sources begin as `pending-owner-review`. The upload command requires every registered source to be `approved`, so a draft cannot be uploaded accidentally. Review instructions are in `docs/phase-2-owner-review.md`.
 
+The upload command also compares managed `.md` and `.md.metadata.json` objects under the configured S3 prefix with the source registry. It reports obsolete objects and stops before uploading by default. After reviewing the reported keys, explicitly remove them with:
+
+```bash
+npm run knowledge:upload -- --delete-obsolete
+```
+
 ## Maintenance checklist
 
 1. Confirm every fact is approved for public release and resolve conflicts using the authority order in `docs/phase-0-product-requirements.md`.

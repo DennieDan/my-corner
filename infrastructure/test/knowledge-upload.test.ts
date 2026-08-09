@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  findObsoleteKnowledgeKeys,
+  isManagedKnowledgeKey,
   uploadKnowledgeObject,
   type KnowledgeObjectStore,
   type KnowledgeObjectMetadata,
@@ -65,5 +67,41 @@ describe("uploadKnowledgeObject", () => {
     await expect(uploadKnowledgeObject({ store, ...commonInput })).resolves.toBe("changed");
 
     expect(putObject).toHaveBeenCalledOnce();
+  });
+});
+
+describe("managed knowledge inventory", () => {
+  it.each([
+    "documents/profile.md",
+    "documents/profile.md.metadata.json",
+  ])("recognizes %s as a managed object", (key) => {
+    expect(isManagedKnowledgeKey(key)).toBe(true);
+  });
+
+  it.each([
+    "documents/readme.txt",
+    "documents/metadata/source-registry.json",
+    "documents/folder/",
+  ])("does not treat %s as a managed object", (key) => {
+    expect(isManagedKnowledgeKey(key)).toBe(false);
+  });
+
+  it("returns sorted managed objects that are no longer expected", () => {
+    const expected = new Set([
+      "documents/profile.md",
+      "documents/profile.md.metadata.json",
+    ]);
+    const remote = [
+      "documents/removed.md.metadata.json",
+      "documents/readme.txt",
+      "documents/profile.md",
+      "documents/removed.md",
+      "documents/profile.md.metadata.json",
+    ];
+
+    expect(findObsoleteKnowledgeKeys(remote, expected)).toEqual([
+      "documents/removed.md",
+      "documents/removed.md.metadata.json",
+    ]);
   });
 });
