@@ -65,7 +65,7 @@ aws bedrock-agent-runtime retrieve \
   --retrieval-query '{"text":"What projects has Dan worked on?"}'
 ```
 
-The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The sync command starts a Bedrock Knowledge Base ingestion job and waits for completion. Evaluation responses are written under the ignored `evaluations/results/` directory.
+The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The sync command starts a Bedrock Knowledge Base ingestion job, reports its final statistics and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
 ## Environment variable contract
 
@@ -80,6 +80,7 @@ The validation command checks the source registry, document/sidecar pairs, requi
 | `BEDROCK_DATA_SOURCE_ID`    | Sync                 | Knowledge Base data source identifier            | No     |
 | `KNOWLEDGE_BUCKET_NAME`     | Upload               | Private source bucket name                       | No     |
 | `KNOWLEDGE_PREFIX`          | Upload               | Object-key prefix, default `documents`           | No     |
+| `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` | Sync | Maximum ingestion wait, default `900` | No |
 | `OPENAI_API_KEY_SECRET_ARN` | Agent                | Secrets Manager ARN containing the OpenAI key    | No     |
 | `OPENAI_MODEL`              | Agent                | OpenAI model name, default `gpt-5.6-luna`        | No     |
 | `ALLOWED_ORIGIN`            | Agent                | Exact browser origin allowed by CORS             | No     |
