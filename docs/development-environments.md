@@ -55,6 +55,8 @@ npm run knowledge:validate:approved
 npm run knowledge:upload # Upload to S3. requires .env.local values (KNOWLEDGE_BUCKET_NAME, KNOWLEDGE_PREFIX,AWS_REGION)
 npm run knowledge:sync # Synchronize S3 into Bedrock. requires .env.local values (BEDROCK_KNOWLEDGE_BASE_ID, BEDROCK_DATA_SOURCE_ID, AWS_REGION)
 npm run knowledge:ingest # Validate approved sources, upload changes, then synchronize Bedrock
+npm run knowledge:retrieve -- --query "What projects has Dan worked on?" --results 8
+npm run knowledge:retrieve -- --bulk --results 8
 AGENT_API_URL=https://example.test/v1/chat npm run evaluate
 ```
 
@@ -66,7 +68,7 @@ aws bedrock-agent-runtime retrieve \
   --retrieval-query '{"text":"What projects has Dan worked on?"}'
 ```
 
-The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The ingest command runs approved-only validation, upload, and synchronization in order and stops immediately if any step fails. The sync step starts a Bedrock Knowledge Base ingestion job, reports its job ID, final statistics, and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. Evaluation responses are written under the ignored `evaluations/results/` directory.
+The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The ingest command runs approved-only validation, upload, and synchronization in order and stops immediately if any step fails. The sync step starts a Bedrock Knowledge Base ingestion job, reports its job ID, final statistics, and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. The retrieval command calls the Bedrock `Retrieve` API directly; bulk mode reads `evaluations/questions.jsonl`. Timestamped retrieval JSON is written under the ignored `evaluations/results/retrieval/` directory. Terminal logs contain question IDs and result counts but not retrieved chunk text. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
 ## Environment variable contract
 

@@ -23,6 +23,7 @@
     "knowledge:upload": "npm --prefix infrastructure run knowledge:upload",
     "knowledge:sync": "npm --prefix infrastructure run knowledge:sync",
     "knowledge:ingest": "npm --prefix infrastructure run knowledge:ingest",
+    "knowledge:retrieve": "npm --prefix infrastructure run knowledge:retrieve",
     "evaluate": "node evaluations/run-evaluation.mjs"
   },
   "dependencies": {

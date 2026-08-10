@@ -31,6 +31,31 @@ After source review, run the complete validation, upload, and Bedrock ingestion 
 npm run knowledge:ingest
 ```
 
+Query the Bedrock Knowledge Base directly without an OpenAI generation step:
+
+```bash
+# Single-question debugging
+npm run knowledge:retrieve -- \
+  --query "What projects has Dan worked on?" \
+  --results 8
+
+# Bulk retrieval over evaluations/questions.jsonl
+npm run knowledge:retrieve -- --bulk --results 8
+
+# Optional search and metadata filter configuration
+npm run knowledge:retrieve -- \
+  --bulk \
+  --search-type semantic \
+  --filter '{"equals":{"key":"reviewStatus","value":"approved"}}'
+
+# Read a complicated filter from a JSON file
+npm run knowledge:retrieve -- \
+  --bulk \
+  --filter-file filters/approved-projects.json
+```
+
+Use `--knowledge-base-id` to override `BEDROCK_KNOWLEDGE_BASE_ID`, and use `--filter-file` for filters that are inconvenient to quote in the shell. `hybrid` search can be requested with `--search-type hybrid`, but Bedrock supports it only for compatible vector stores. Full retrieved chunks and citation metadata are written to private, git-ignored JSON files under `evaluations/results/retrieval/`; terminal output does not print chunk text.
+
 ## Maintenance checklist
 
 1. Confirm every fact is approved for public release and resolve conflicts using the authority order in `docs/phase-0-product-requirements.md`.
