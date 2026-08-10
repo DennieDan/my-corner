@@ -67,11 +67,15 @@ describe("evaluateRetrieval", () => {
     const evaluation = evaluateRetrieval([
       {
         id: "rank-1",
+        language: "en",
+        question: "English rank one",
         sourceHints: ["timeline:2020-01"],
         results: [result(1, "source:education", 0.9), result(2, "source:project-a", 0.7)],
       },
       {
         id: "rank-3",
+        language: "vi",
+        question: "Vietnamese rank three",
         sourceHints: ["project:a"],
         results: [
           result(1, "source:education", 0.8),
@@ -81,11 +85,15 @@ describe("evaluateRetrieval", () => {
       },
       {
         id: "miss",
+        language: "vi",
+        question: "Vietnamese miss",
         sourceHints: ["project:b"],
         results: [result(1, "source:education", 0.85)],
       },
       {
         id: "unanswerable",
+        language: "en",
+        question: "Private information",
         sourceHints: [],
         results: [result(1, "source:education", 0.5)],
       },
@@ -129,6 +137,39 @@ describe("evaluateRetrieval", () => {
       count: 1,
       mean: 0.5,
     });
+    expect(evaluation.summary.languageBreakdown.en).toMatchObject({
+      questionCount: 2,
+      answerableQuestionCount: 1,
+      hitRateAt1: { hits: 1, total: 1, rate: 1 },
+      meanReciprocalRank: 1,
+    });
+    expect(evaluation.summary.languageBreakdown.vi).toMatchObject({
+      questionCount: 2,
+      answerableQuestionCount: 2,
+      hitRateAt1: { hits: 0, total: 2, rate: 0 },
+      hitRateAt3: { hits: 1, total: 2, rate: 0.5 },
+      hitRateAt5: { hits: 1, total: 2, rate: 0.5 },
+      meanReciprocalRank: 1 / 6,
+    });
+    expect(evaluation.queries.unanswerable.strongestIrrelevantResult).toMatchObject({
+      rank: 1,
+      score: 0.5,
+      sourceId: "source:education",
+    });
+    expect(evaluation.failures).toEqual([
+      expect.objectContaining({
+        questionId: "miss",
+        language: "vi",
+        question: "Vietnamese miss",
+        reason: "expected-source-not-in-top-5",
+        expectedSourceIds: ["source:project-b"],
+        returnedSources: [expect.objectContaining({
+          rank: 1,
+          score: 0.85,
+          sourceId: "source:education",
+        })],
+      }),
+    ]);
   });
 
   it("excludes retrieval failures from hit-rate and MRR denominators", () => {
@@ -140,6 +181,8 @@ describe("evaluateRetrieval", () => {
       },
       {
         id: "credentials-failed",
+        language: "vi",
+        question: "Failed request",
         sourceHints: ["project:b"],
         results: [],
         error: { name: "CredentialsProviderError" },
@@ -161,6 +204,13 @@ describe("evaluateRetrieval", () => {
       hitRateAt1: { hits: 1, total: 1, rate: 1 },
       meanReciprocalRank: 1,
     });
+    expect(evaluation.failures).toContainEqual(expect.objectContaining({
+      questionId: "credentials-failed",
+      language: "vi",
+      question: "Failed request",
+      reason: "retrieval-error",
+      returnedSources: [],
+    }));
   });
 
   it("summarizes score distributions with percentiles", () => {

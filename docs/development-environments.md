@@ -70,26 +70,36 @@ aws bedrock-agent-runtime retrieve \
 
 The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The ingest command runs approved-only validation, upload, and synchronization in order and stops immediately if any step fails. The sync step starts a Bedrock Knowledge Base ingestion job, reports its job ID, final statistics, and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. The retrieval command calls the Bedrock `Retrieve` API directly; bulk mode reads `evaluations/questions.jsonl`. Timestamped retrieval JSON is written under the ignored `evaluations/results/retrieval/` directory. Terminal logs contain question IDs and result counts but not retrieved chunk text. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
-Bulk retrieval resolves each question's source hints through the source registry and records the acceptable canonical source IDs. Its `evaluationSummary` contains Hit@1, Hit@3, Hit@5, mean reciprocal rank, and score distributions. Rates are decimals from 0 to 1. Questions whose Bedrock request fails are marked `evaluated: false` and excluded from metric denominators rather than being counted as retrieval misses.
+Bulk retrieval resolves each question's source hints through the source registry and records the acceptable canonical source IDs. Its `evaluationSummary` contains collective and per-language Hit@1, Hit@3, Hit@5, mean reciprocal rank, and score distributions. Rates are decimals from 0 to 1. Each successfully retrieved unanswerable question records its strongest returned candidate as `strongestIrrelevantResult`. `evaluationFailures` lists retrieval errors and answerable questions whose expected sources missed the top five, together with expected and returned source rankings and scores. Questions whose Bedrock request fails are marked `evaluated: false` and excluded from metric denominators rather than being counted as retrieval misses.
+
+Strongest Irrelevant Score: 0.68
+
+Rank 1 retrieved chunk for an unanswerable question is maximum 0.68. So our threshold 0.69 can do its work already.
+
+| Group      | Questions | Answerable | Unanswerable |
+| ---------- | --------: | ---------: | -----------: |
+| Collective |        73 |         56 |           17 |
+| English    |        57 |         45 |           12 |
+| Vietnamese |        16 |         11 |            5 |
 
 ## Environment variable contract
 
-| Variable                    | Consumer             | Purpose                                          | Secret |
-| --------------------------- | -------------------- | ------------------------------------------------ | ------ |
-| `NEXT_PUBLIC_AGENT_API_URL` | Website              | Public base URL for the deployed agent API       | No     |
-| `DENNIE_ENVIRONMENT`        | Agent/infrastructure | One of `development`, `staging`, or `production` | No     |
-| `AWS_REGION`                | Agent/AWS SDK        | AWS service region                               | No     |
-| `CDK_DEFAULT_ACCOUNT`       | CDK                  | Target AWS account ID                            | No     |
-| `CDK_DEFAULT_REGION`        | CDK                  | Target AWS region                                | No     |
-| `BEDROCK_KNOWLEDGE_BASE_ID` | Agent/sync           | Knowledge Base identifier                        | No     |
-| `BEDROCK_DATA_SOURCE_ID`    | Sync                 | Knowledge Base data source identifier            | No     |
-| `KNOWLEDGE_BUCKET_NAME`     | Upload               | Private source bucket name                       | No     |
-| `KNOWLEDGE_PREFIX`          | Upload               | Object-key prefix, default `documents`           | No     |
-| `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` | Sync | Maximum ingestion wait, default `900` | No |
-| `OPENAI_API_KEY_SECRET_ARN` | Agent                | Secrets Manager ARN containing the OpenAI key    | No     |
-| `OPENAI_MODEL`              | Agent                | OpenAI model name, default `gpt-5.6-luna`        | No     |
-| `ALLOWED_ORIGIN`            | Agent                | Exact browser origin allowed by CORS             | No     |
-| `LOG_LEVEL`                 | Agent                | `debug`, `info`, `warn`, or `error`              | No     |
-| `AGENT_API_URL`             | Evaluations          | Full chat endpoint used by the runner            | No     |
+| Variable                              | Consumer             | Purpose                                          | Secret |
+| ------------------------------------- | -------------------- | ------------------------------------------------ | ------ |
+| `NEXT_PUBLIC_AGENT_API_URL`           | Website              | Public base URL for the deployed agent API       | No     |
+| `DENNIE_ENVIRONMENT`                  | Agent/infrastructure | One of `development`, `staging`, or `production` | No     |
+| `AWS_REGION`                          | Agent/AWS SDK        | AWS service region                               | No     |
+| `CDK_DEFAULT_ACCOUNT`                 | CDK                  | Target AWS account ID                            | No     |
+| `CDK_DEFAULT_REGION`                  | CDK                  | Target AWS region                                | No     |
+| `BEDROCK_KNOWLEDGE_BASE_ID`           | Agent/sync           | Knowledge Base identifier                        | No     |
+| `BEDROCK_DATA_SOURCE_ID`              | Sync                 | Knowledge Base data source identifier            | No     |
+| `KNOWLEDGE_BUCKET_NAME`               | Upload               | Private source bucket name                       | No     |
+| `KNOWLEDGE_PREFIX`                    | Upload               | Object-key prefix, default `documents`           | No     |
+| `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` | Sync                 | Maximum ingestion wait, default `900`            | No     |
+| `OPENAI_API_KEY_SECRET_ARN`           | Agent                | Secrets Manager ARN containing the OpenAI key    | No     |
+| `OPENAI_MODEL`                        | Agent                | OpenAI model name, default `gpt-5.6-luna`        | No     |
+| `ALLOWED_ORIGIN`                      | Agent                | Exact browser origin allowed by CORS             | No     |
+| `LOG_LEVEL`                           | Agent                | `debug`, `info`, `warn`, or `error`              | No     |
+| `AGENT_API_URL`                       | Evaluations          | Full chat endpoint used by the runner            | No     |
 
 The OpenAI API key itself is never an environment variable in the deployed agent or a committed file. It will be stored in AWS Secrets Manager; local credentials belong only in ignored local configuration.

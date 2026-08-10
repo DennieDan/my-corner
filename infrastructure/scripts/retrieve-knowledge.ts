@@ -143,6 +143,7 @@ const output = {
     failed: failureCount,
   },
   evaluationSummary: evaluation?.summary ?? null,
+  evaluationFailures: evaluation?.failures ?? null,
   queries: outputQueries,
 };
 
