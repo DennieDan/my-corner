@@ -13,6 +13,8 @@ import {
   type RecordedRetrievalResult,
   type RetrievalConfiguration,
 } from "./knowledge-retrieval.js";
+import { evaluateRetrieval } from "./knowledge-retrieval-evaluation.js";
+import { loadAndValidateKnowledge } from "./knowledge-manifest.js";
 
 interface EvaluationQuestion {
   id: string;
@@ -118,6 +120,13 @@ const outputPath = path.join(
   options.outputDirectory,
   `retrieval-${options.mode}-${timestamp}.json`,
 );
+const evaluation = options.mode === "bulk"
+  ? evaluateRetrieval(recordedQueries, await loadAndValidateKnowledge())
+  : null;
+const outputQueries = recordedQueries.map((query) => ({
+  ...query,
+  ...(evaluation ? { evaluation: evaluation.queries[query.id] } : {}),
+}));
 const output = {
   schemaVersion: 1,
   generatedAt,
@@ -133,7 +142,8 @@ const output = {
     succeeded: recordedQueries.length - failureCount,
     failed: failureCount,
   },
-  queries: recordedQueries,
+  evaluationSummary: evaluation?.summary ?? null,
+  queries: outputQueries,
 };
 
 await mkdir(options.outputDirectory, { recursive: true });

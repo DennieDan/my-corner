@@ -70,6 +70,8 @@ aws bedrock-agent-runtime retrieve \
 
 The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The ingest command runs approved-only validation, upload, and synchronization in order and stops immediately if any step fails. The sync step starts a Bedrock Knowledge Base ingestion job, reports its job ID, final statistics, and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. The retrieval command calls the Bedrock `Retrieve` API directly; bulk mode reads `evaluations/questions.jsonl`. Timestamped retrieval JSON is written under the ignored `evaluations/results/retrieval/` directory. Terminal logs contain question IDs and result counts but not retrieved chunk text. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
+Bulk retrieval resolves each question's source hints through the source registry and records the acceptable canonical source IDs. Its `evaluationSummary` contains Hit@1, Hit@3, Hit@5, mean reciprocal rank, and score distributions. Rates are decimals from 0 to 1. Questions whose Bedrock request fails are marked `evaluated: false` and excluded from metric denominators rather than being counted as retrieval misses.
+
 ## Environment variable contract
 
 | Variable                    | Consumer             | Purpose                                          | Secret |
