@@ -8,13 +8,19 @@
 - Visibility: public
 - Sensitivity: public-safe
 
+## RAG project summary
+
+ARAAg is Dan's retrieval-augmented generation (RAG) project. She built it to retrieve regulatory evidence from a roughly 700-page Singapore customs reference and classify products into Harmonized System Codes.
+
+The project demonstrates Dan's hands-on experience with RAG, PDF knowledge retrieval, vector databases, LangGraph, LangChain, ChromaDB, and evaluation of retrieval and model trade-offs.
+
 ## Problem addressed
 
 Dan built ARAAg to classify descriptions of imported or exported products into Singapore Harmonized System Codes. The project searches evidence from the Singapore Trade Classification, Customs and Excise Duties 2022 instead of requiring a person to scan the roughly 700-page reference manually.
 
 ARAAg is a customs and regulatory-classification project. It is not a medical-diagnosis system.
 
-## Retrieval and agent design
+## Retrieval-augmented generation and agent design
 
 The project uses retrieval-augmented generation over PDF-based regulatory material. Its public technology stack includes Python, LangGraph, LangChain, and ChromaDB.
 

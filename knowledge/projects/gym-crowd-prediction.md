@@ -8,6 +8,10 @@
 - Visibility: public
 - Sensitivity: public-safe
 
+## Cloud project summary
+
+The NUS Gym Crowd Prediction project is Dan's cloud-based machine-learning project. It uses AWS Lambda and Amazon EventBridge to collect data for predicting future gym crowd levels.
+
 ## Problem addressed
 
 The NUS Gym Crowd Prediction project aims to predict future gym crowd levels so people can plan gym visits. Existing occupancy information shows current conditions, while this project asks whether a gym is likely to be crowded at a future time, such as 3 p.m. the next day.

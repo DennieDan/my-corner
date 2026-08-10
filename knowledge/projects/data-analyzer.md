@@ -10,7 +10,7 @@
 
 ## Purpose and audience
 
-Dan built Data Analyzer, also described on her website as the Data Analytics Chatbot, to make exploratory data analysis more accessible to people who are not comfortable writing Python or R code.
+Data Analyzer is software for people who do not code or are not comfortable writing Python or R. It lets them upload datasets and perform exploratory data analysis through natural-language questions.
 
 Users can upload CSV or XLSX datasets and ask questions in natural language. The application can return data insights and generate plots from the uploaded data.
 
