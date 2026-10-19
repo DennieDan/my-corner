@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test:chat": "node --test tests/chat-client.test.mjs",
     "start": "next start",
     "lint": "eslint .",
     "agent:build": "npm --prefix agent run build",
