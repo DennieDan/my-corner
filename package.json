@@ -27,6 +27,13 @@
     "knowledge:sync": "npm --prefix infrastructure run knowledge:sync",
     "knowledge:ingest": "npm --prefix infrastructure run knowledge:ingest",
     "knowledge:retrieve": "npm --prefix infrastructure run knowledge:retrieve",
+    "release:infra": "node infrastructure/scripts/release.mjs infra",
+    "release:knowledge": "node infrastructure/scripts/release.mjs knowledge",
+    "release:seed-secret": "node infrastructure/scripts/release.mjs seed-secret",
+    "release:agent": "node infrastructure/scripts/release.mjs agent",
+    "release:website": "node infrastructure/scripts/release.mjs website",
+    "release:rollback:agent": "node infrastructure/scripts/release.mjs rollback-agent",
+    "release:rollback:website": "node infrastructure/scripts/release.mjs rollback-website",
     "evaluate": "npm run agent:build && node --env-file=infrastructure/.env.local evaluations/run-evaluation.mjs",
     "evaluate:quality": "npm run agent:build && node --env-file=infrastructure/.env.local evaluations/judge-evaluation.mjs"
   },

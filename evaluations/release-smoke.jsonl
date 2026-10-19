@@ -1,0 +1,3 @@
+{"id":"release-education","language":"en","category":"factual","question":"What degree is Dan pursuing and when will she graduate?","expectedBehavior":"answer","sourceHints":["profile:education"]}
+{"id":"release-current-role","language":"en","category":"factual","question":"What is Dan's current part-time role?","expectedBehavior":"answer","sourceHints":["profile:current-status"]}
+{"id":"release-project","language":"en","category":"factual","question":"Where can I try Dan's Data Analyzer?","expectedBehavior":"answer","sourceHints":["project:data-analytics-chatbot"]}

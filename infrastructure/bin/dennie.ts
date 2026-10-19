@@ -20,16 +20,24 @@ const env = {
 };
 const commonProps = { env, terminationProtection: config.terminationProtection };
 
-const knowledge = new KnowledgeStack(app, `${config.stackPrefix}-Knowledge`, commonProps);
+const knowledge = config.name === "production"
+  ? null
+  : new KnowledgeStack(app, `${config.stackPrefix}-Knowledge`, commonProps);
+const sharedKnowledgeBaseId = process.env.DENNIE_SHARED_KNOWLEDGE_BASE_ID;
+const sharedKnowledgeBaseArn = process.env.DENNIE_SHARED_KNOWLEDGE_BASE_ARN;
+if (config.name === "production" && (!sharedKnowledgeBaseId || !sharedKnowledgeBaseArn)) {
+  throw new Error("Production requires DENNIE_SHARED_KNOWLEDGE_BASE_ID and DENNIE_SHARED_KNOWLEDGE_BASE_ARN");
+}
 const agent = new AgentStack(app, `${config.stackPrefix}-Agent`, {
   ...commonProps,
   config,
-  knowledgeBaseId: knowledge.knowledgeBaseId,
-  knowledgeBaseArn: knowledge.knowledgeBaseArn,
+  knowledgeBaseId: knowledge?.knowledgeBaseId ?? sharedKnowledgeBaseId!,
+  knowledgeBaseArn: knowledge?.knowledgeBaseArn ?? sharedKnowledgeBaseArn!,
 });
 new MonitoringStack(app, `${config.stackPrefix}-Monitoring`, {
   ...commonProps,
   config,
+  alertEmail: process.env.DENNIE_ALERT_EMAIL ?? (config.name === "production" ? "dandinh1922@gmail.com" : undefined),
   agentFunction: agent.agentFunction,
   api: agent.api,
   functionLogGroup: agent.functionLogGroup,

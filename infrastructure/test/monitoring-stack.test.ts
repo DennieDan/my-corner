@@ -16,13 +16,19 @@ describe("MonitoringStack", () => {
       knowledgeBaseArn: "arn:aws:bedrock:ap-southeast-1:123456789012:knowledge-base/kb-test",
     });
     const monitoring = new MonitoringStack(app, "TestMonitoring", {
-      env, config, agentFunction: agent.agentFunction, api: agent.api,
+      env, config, alertEmail: "alerts@example.com", agentFunction: agent.agentFunction, api: agent.api,
       functionLogGroup: agent.functionLogGroup,
     });
     const built = Template.fromStack(monitoring);
     built.resourceCountIs("AWS::Logs::MetricFilter", 3);
+    built.hasResourceProperties("AWS::Logs::MetricFilter", {
+      MetricTransformations: Match.arrayWith([Match.objectLike({ MetricNamespace: "Dennie/Agent/development" })]),
+    });
     built.resourceCountIs("AWS::CloudWatch::Alarm", 6);
     built.resourceCountIs("AWS::CloudWatch::Dashboard", 1);
+    built.hasResourceProperties("AWS::SNS::Subscription", {
+      Protocol: "email", Endpoint: "alerts@example.com",
+    });
     built.hasResourceProperties("AWS::Budgets::Budget", { Budget: Match.objectLike({
       BudgetType: "COST", TimeUnit: "MONTHLY", BudgetLimit: { Amount: 25, Unit: "USD" },
     }) });

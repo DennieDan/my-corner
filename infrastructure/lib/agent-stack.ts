@@ -106,7 +106,25 @@ export class AgentStack extends Stack {
       },
     });
 
-    const integration = new apigateway.LambdaIntegration(this.agentFunction, {
+    let apiTarget: lambda.IFunction = this.agentFunction;
+    let liveAlias: lambda.CfnAlias | undefined;
+    if (props.config.name === "production") {
+      const bootstrapVersion = new lambda.CfnVersion(this, "BootstrapVersion", {
+        functionName: this.agentFunction.functionName,
+      });
+      liveAlias = new lambda.CfnAlias(this, "LiveAlias", {
+        functionName: this.agentFunction.functionName,
+        functionVersion: "1",
+        name: "live",
+      });
+      liveAlias.addResourceDependency(bootstrapVersion);
+      apiTarget = lambda.Function.fromFunctionAttributes(this, "LiveAgentAlias", {
+        functionArn: `${this.agentFunction.functionArn}:live`,
+        sameEnvironment: true,
+      });
+    }
+
+    const integration = new apigateway.LambdaIntegration(apiTarget, {
       proxy: true,
       responseTransferMode: apigateway.ResponseTransferMode.STREAM,
       allowTestInvoke: false,
@@ -123,6 +141,13 @@ export class AgentStack extends Stack {
     const health = this.api.root.addResource("health");
     health.addCorsPreflight(cors);
     health.addMethod("GET", integration);
+
+    if (liveAlias) {
+      for (const construct of this.node.findAll()) {
+        if (construct instanceof lambda.CfnPermission) construct.addResourceDependency(liveAlias);
+      }
+      new CfnOutput(this, "AgentLiveAliasArn", { value: `${this.agentFunction.functionArn}:live` });
+    }
 
     new CfnOutput(this, "AgentApiChatUrl", { value: this.api.urlForPath("/v1/chat") });
     new CfnOutput(this, "AgentApiHealthUrl", { value: this.api.urlForPath("/health") });

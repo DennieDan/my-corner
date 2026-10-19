@@ -23,3 +23,4 @@ dist/
 cdk.out/
 coverage/
 evaluations/results/
+.releases/

@@ -12,5 +12,6 @@ export default tseslint.config(
       parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
     },
   },
+  { files: ["**/*.mjs"], languageOptions: { globals: globals.node } },
   { ignores: ["dist/**", "cdk.out/**", "coverage/**"] },
 );

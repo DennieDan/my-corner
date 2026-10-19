@@ -13,7 +13,7 @@ Use Node.js 24.14.1 and npm 11.11.0 as specified in `.nvmrc` and `package.json`.
 
 ## Dennie RAG development
 
-The custom RAG chatbot is being developed in isolated packages so the static website can continue to build and deploy independently. See [docs/development-environments.md](docs/development-environments.md) for setup, checks, CDK environments, knowledge ingestion, evaluation commands, and the environment variable contract.
+The custom RAG chatbot lives in isolated packages so the static website can build and deploy independently. See [docs/development-environments.md](docs/development-environments.md) for setup and evaluation, and [docs/phase-9-release.md](docs/phase-9-release.md) for production release and rollback commands. Production has its own Agent and Monitoring stacks and shares the development Knowledge Base.
 
 ## View the Phase 7 chat interface
 
@@ -30,6 +30,6 @@ Set `NEXT_PUBLIC_AGENT_API_URL` in `.env.local` to the public API stage base URL
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and select **Chat with Dennie** in the lower right. The [Dennie information page](http://localhost:3000/dennie) describes the chat's scope and data handling. The browser sends requests directly to the API; `NEXT_PUBLIC_AGENT_API_URL` is public and must not contain a key. Restart the development server after changing it. The deployed development agent needs a working OpenAI key in Secrets Manager before it can generate evidence-backed answers; until then the interface shows the agent's safe availability error.
+Open [http://localhost:3000](http://localhost:3000) and select **Chat with Dennie** in the lower right. The [Dennie information page](http://localhost:3000/dennie) describes the chat's scope and data handling. The browser sends requests directly to the API; `NEXT_PUBLIC_AGENT_API_URL` is public and must not contain a key. Restart the development server after changing it.
 
 Run `npm run test:chat` to check stream parsing and history limits. Run `npx tsc --noEmit` to type-check the website independently of the agent and infrastructure packages.

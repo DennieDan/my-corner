@@ -11,6 +11,7 @@ import {
   aws_lambda as lambda,
   aws_logs as logs,
   aws_sns as sns,
+  aws_sns_subscriptions as snsSubscriptions,
   type StackProps,
 } from "aws-cdk-lib";
 import type { Construct } from "constructs";
@@ -19,6 +20,7 @@ import type { EnvironmentConfig } from "./config.js";
 
 export interface MonitoringStackProps extends StackProps {
   config: EnvironmentConfig;
+  alertEmail?: string;
   agentFunction: lambda.IFunction;
   api: apigateway.RestApi;
   functionLogGroup: logs.ILogGroup;
@@ -32,6 +34,7 @@ export class MonitoringStack extends Stack {
       topicName: `${props.config.stackPrefix}-alerts`,
       displayName: `${props.config.name} Dennie agent alerts`,
     });
+    if (props.alertEmail) alerts.addSubscription(new snsSubscriptions.EmailSubscription(props.alertEmail));
     const topicPolicy = new sns.TopicPolicy(this, "AgentAlertPolicy", { topics: [alerts] });
     if (props.config.awsBudgetUsd !== null) {
       topicPolicy.document.addStatements(new iam.PolicyStatement({
@@ -57,7 +60,7 @@ export class MonitoringStack extends Stack {
     }));
 
     const period = Duration.minutes(5);
-    const providerNamespace = "Dennie/Agent";
+    const providerNamespace = `Dennie/Agent/${props.config.name}`;
     const providerMetricName = "ProviderFailures";
     for (const outcome of ["UPSTREAM_UNAVAILABLE", "AGENT_TIMEOUT", "ANSWER_UNVERIFIED"]) {
       new logs.MetricFilter(this, `${outcome}Filter`, {
