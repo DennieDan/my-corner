@@ -5,7 +5,7 @@ export const dennieInfoCard = {
   deployer: siteMetadata.author,
   purpose:
     "Dennie is a generative AI chatbot on My Corner. It is solely intended to help visitors discover information about Dan Dinh.",
-  lastUpdated: "2026-07-23",
+  lastUpdated: "2026-10-19",
   version: "1.0",
   sections: [
     {
@@ -24,7 +24,7 @@ export const dennieInfoCard = {
       id: "data",
       title: "How user data is handled",
       summary:
-        "Conversation data is processed by Voiceflow. Chat history is retained for a limited period. Conversations are not used to train models.",
+        "Recent chat history stays in this browser. Messages are sent to the Dennie agent to answer each question.",
     },
     {
       id: "reporting",
@@ -59,19 +59,18 @@ export const dennieInfoCard = {
   },
   data: {
     collected: [
-      "Conversation history associated with your chat session (processed via Voiceflow)",
-      "If you submit the contact form in chat: name, email, phone, and company — these fields are sent to Dan, the website owner",
+      "Your current question, up to 12 recent messages, and a random browser session identifier are sent to the agent API",
     ],
     storage: [
-      "Chat history is stored in the backend for up to 48 hours after inactivity, and may be deleted sooner if you clear the chat",
-      "Content shown in the chat interface on your device is separate from backend state and is not visible in the backend after chat session deletion",
-      "Voiceflow processes conversation data to operate the chatbot",
+      "Up to 12 recent messages are kept in this browser's local storage until you clear them or your browser removes site data",
+      "The agent processes each request through AWS and OpenAI. It does not keep complete chat transcripts on the server",
+      "The agent records operational metrics without complete prompts or answers",
     ],
     training:
       "Conversations with Dennie are not used to train or fine-tune models.",
     controls: [
-      "You can clear chat history from the chat interface when the chat is open. This deletes the conversation from the backend immediately where possible.",
-      "Chat history is otherwise removed after about 48 hours of inactivity.",
+      "You can clear chat history from the chat interface at any time. This removes the recent messages and random session identifier from this browser.",
+      "You can stop a response while it is streaming.",
     ],
   },
   reporting: {

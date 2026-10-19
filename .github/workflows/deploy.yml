@@ -1,53 +1,58 @@
-name: Deploy Next.js to AWS S3 & CloudFront
+name: Release website to dandinh.net
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main # Triggers the build whenever you push to the main branch
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'hooks/**'
+      - 'lib/**'
+      - 'public/**'
+      - 'styles/**'
+      - 'tests/chat-widget.test.tsx'
+      - 'infrastructure/scripts/release.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.mjs'
+      - '.github/workflows/deploy.yml'
+
+concurrency:
+  group: website-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # This permission is required for requesting the JWT OIDC token
     permissions:
       id-token: write
       contents: read
     env:
       S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
       CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
-
+      NEXT_PUBLIC_AGENT_API_URL: ${{ vars.NEXT_PUBLIC_AGENT_API_URL }}
+      DENNIE_ENVIRONMENT: production
     steps:
-      # 1. Checkout your code from GitHub
-      - name: Checkout Code
-        uses: actions/checkout@v5
-
-      # 2. Setup Node.js environment
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
-          node-version-file: ".nvmrc"
-          cache: "npm"
-
-      # 3. Install dependencies and build Next.js static files
-      - name: Install and Build
-        env:
-          NEXT_PUBLIC_VOICEFLOW_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID }}
-          NEXT_PUBLIC_VOICEFLOW_DELETE_STATE_URL: ${{ vars.NEXT_PUBLIC_VOICEFLOW_DELETE_STATE_URL }}
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
         run: |
           npm ci
-          npm run build
-
-      # 4. Configure AWS Credentials using your GitHub Secrets
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+          npm ci --prefix infrastructure
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::520070583275:role/GitHubActionsMyCornerRole
           aws-region: ap-southeast-1
-
-      # 5. Sync the 'out' folder contents to your S3 bucket
-      - name: Deploy to S3
-        run: aws s3 sync ./out "s3://${S3_BUCKET_NAME}" --delete
-
-      # 6. Tell CloudFront to clear its cache so visitors see the new blog immediately
-      - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
+      - name: Build, deploy, and smoke test
+        run: npm run release:website
+      - name: Save rollback record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-release-record
+          path: .releases/website-production-*.json
+          if-no-files-found: ignore
