@@ -1,12 +1,16 @@
 import { z } from "zod";
 
+const normalizedText = (maximum: number) => z.string()
+  .transform((value) => value.normalize("NFC").replace(/\s+/g, " ").trim())
+  .pipe(z.string().min(1).max(maximum));
+
 const historyMessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
-  content: z.string().trim().min(1).max(4_000),
+  content: normalizedText(4_000),
 });
 
 export const chatRequestSchema = z.object({
-  message: z.string().trim().min(1).max(2_000),
+  message: normalizedText(2_000),
   history: z.array(historyMessageSchema).max(12).default([]),
   sessionId: z.string().trim().min(8).max(128),
 }).superRefine(({ history }, context) => {

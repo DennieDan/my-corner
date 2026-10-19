@@ -28,6 +28,8 @@ npm run infra:synth -- -c environment=development
 
 The root website build remains independent of the agent and infrastructure dependencies. Voiceflow stays in place until the custom chatbot passes the production cutover checks.
 
+The Phase 5 agent checks use injected Bedrock and OpenAI adapters, so they run without AWS credentials or an OpenAI key. The Lambda export uses response streaming for `POST /v1/chat` (`sources`, `delta`, `done`, and `error` SSE events) and returns a buffered JSON readiness result from `GET /health`. Production configuration is read from the variables in `agent/.env.example`; the OpenAI key itself is fetched from Secrets Manager. The agent requests 12 semantic Bedrock candidates, keeps approved public results scoring at least 0.65, and passes at most 12 labeled chunks to OpenAI. The score floor filters candidates and does not decide whether a question is answerable.
+
 ## Infrastructure commands
 
 Run CDK commands with AWS credentials for the intended account:

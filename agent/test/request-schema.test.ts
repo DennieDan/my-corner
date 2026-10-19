@@ -12,6 +12,13 @@ describe("chatRequestSchema", () => {
     expect(parsed.history).toEqual([]);
   });
 
+  it("normalizes whitespace and Unicode before sending text to providers", () => {
+    const parsed = chatRequestSchema.parse({ message: "  Cafe\u0301\n  projects? ", sessionId: "session-1234",
+      history: [{ role: "user", content: "  Dan\t studies  " }] });
+    expect(parsed.message).toBe("Café projects?");
+    expect(parsed.history[0].content).toBe("Dan studies");
+  });
+
   it("rejects oversized conversation history", () => {
     const result = chatRequestSchema.safeParse({
       message: "Continue",
