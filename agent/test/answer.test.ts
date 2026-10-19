@@ -41,4 +41,13 @@ describe("OpenAI Responses stream", () => {
       .stream("question", "model", new AbortController().signal)).rejects.toThrow("UPSTREAM_UNAVAILABLE");
     expect(quota).toHaveBeenCalledTimes(1);
   });
+
+  it("invalidates a cached secret after provider authentication fails", async () => {
+    const invalidate = vi.fn();
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(null, { status: 401 }));
+    await expect(new OpenAIAnswerProvider({ get: async () => "stale-key", invalidate }, fetcher)
+      .stream("question", "model", new AbortController().signal)).rejects.toThrow("UPSTREAM_UNAVAILABLE");
+    expect(invalidate).toHaveBeenCalledOnce();
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
 });

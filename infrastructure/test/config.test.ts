@@ -8,11 +8,15 @@ describe("getEnvironmentConfig", () => {
       name: "development",
       stackPrefix: "Dennie-development",
       terminationProtection: false,
+      allowedOrigins: ["https://dandinh.net", "http://localhost:3000"],
+      awsBudgetUsd: null,
     });
   });
 
   it("protects production stacks", () => {
-    expect(getEnvironmentConfig("production").terminationProtection).toBe(true);
+    const production = getEnvironmentConfig("production");
+    expect(production.terminationProtection).toBe(true);
+    expect(production.allowedOrigins).toEqual(["https://dandinh.net"]);
   });
 
   it("rejects unknown environments", () => {

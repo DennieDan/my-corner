@@ -5,6 +5,8 @@ export interface EnvironmentConfig {
   name: EnvironmentName;
   stackPrefix: string;
   terminationProtection: boolean;
+  allowedOrigins: string[];
+  awsBudgetUsd: number | null;
 }
 
 export function getEnvironmentConfig(value: unknown): EnvironmentConfig {
@@ -17,5 +19,9 @@ export function getEnvironmentConfig(value: unknown): EnvironmentConfig {
     name: name as EnvironmentName,
     stackPrefix: `Dennie-${name}`,
     terminationProtection: name === "production",
+    allowedOrigins: name === "production"
+      ? ["https://dandinh.net"]
+      : ["https://dandinh.net", "http://localhost:3000"],
+    awsBudgetUsd: null,
   };
 }

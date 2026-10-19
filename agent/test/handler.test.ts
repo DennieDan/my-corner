@@ -9,7 +9,7 @@ import type { Metric } from "../src/telemetry.js";
 const config: AgentConfig = {
   DENNIE_ENVIRONMENT: "development", AWS_REGION: "ap-southeast-1",
   BEDROCK_KNOWLEDGE_BASE_ID: "kb-test", OPENAI_API_KEY_SECRET_ARN: "secret-test",
-  OPENAI_MODEL: "gpt-5.6-luna", ALLOWED_ORIGIN: "https://dandinh.net", LOG_LEVEL: "info",
+  OPENAI_MODEL: "gpt-5.6-luna", ALLOWED_ORIGINS: ["https://dandinh.net", "http://localhost:3000"], LOG_LEVEL: "info",
 };
 const evidence: Evidence[] = [{
   id: "S1", sourceId: "profile:public-overview", title: "Profile", url: "https://dandinh.net",

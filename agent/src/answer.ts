@@ -9,11 +9,16 @@ export interface AnswerProvider {
   stream(input: string, model: string, signal: AbortSignal): Promise<AnswerStream>;
 }
 
-export interface KeyProvider { get(signal: AbortSignal): Promise<string> }
+export interface KeyProvider {
+  get(signal: AbortSignal): Promise<string>;
+  invalidate?(): void;
+}
 
 export class SecretKeyProvider {
   private cached?: string;
   constructor(private readonly secretArn: string, private readonly client = new SecretsManagerClient({ maxAttempts: 1 })) {}
+
+  invalidate(): void { this.cached = undefined; }
 
   async get(signal: AbortSignal): Promise<string> {
     if (this.cached) return this.cached;
@@ -72,6 +77,7 @@ export class OpenAIAnswerProvider implements AnswerProvider {
         throw new AgentError("UPSTREAM_UNAVAILABLE", 503, error instanceof TypeError);
       }
       if (!result.ok) {
+        if (result.status === 401 || result.status === 403) this.keys.invalidate?.();
         // Rate and quota responses are deliberately never retried.
         throw new AgentError("UPSTREAM_UNAVAILABLE", 503, result.status === 408 || result.status >= 500);
       }

@@ -35,7 +35,6 @@ export interface Dependencies {
 type Metadata = { statusCode: number; headers: Record<string, string> };
 type LambdaStreamRuntime = {
   streamifyResponse: (fn: typeof runHandler) => typeof runHandler;
-  HttpResponseStream: { from: (stream: Writable, metadata: Metadata) => Writable };
 };
 
 function runtime(): LambdaStreamRuntime | undefined {
@@ -46,7 +45,15 @@ const baseHeaders = { "cache-control": "no-store", "x-content-type-options": "no
 
 function responseStream(raw: Writable, statusCode: number, type: string, origin?: string): Writable {
   const headers = { ...baseHeaders, "content-type": type, ...(origin ? { "access-control-allow-origin": origin, vary: "Origin" } : {}) };
-  return runtime()?.HttpResponseStream?.from(raw, { statusCode, headers }) ?? raw;
+  // API Gateway's streaming proxy requires metadata followed by eight NUL bytes.
+  // Writing the framing explicitly avoids depending on HttpResponseStream.from,
+  // which is not available in every managed Node.js streaming runtime.
+  if (runtime()?.streamifyResponse) {
+    const metadata: Metadata = { statusCode, headers };
+    raw.write(JSON.stringify(metadata));
+    raw.write(Buffer.alloc(8));
+  }
+  return raw;
 }
 
 function methodAndPath(event: ChatEvent): [string, string] {
@@ -59,9 +66,9 @@ function requestBody(event: ChatEvent): unknown {
   catch { throw new AgentError("BAD_REQUEST", 400); }
 }
 
-function originFor(event: ChatEvent, allowed: string): string | undefined {
+function originFor(event: ChatEvent, allowed: string[]): string | undefined {
   const header = Object.entries(event.headers ?? {}).find(([key]) => key.toLowerCase() === "origin")?.[1];
-  return header === allowed ? allowed : undefined;
+  return header && allowed.includes(header) ? header : undefined;
 }
 
 export function createHandler(deps: Dependencies) {
@@ -69,7 +76,7 @@ export function createHandler(deps: Dependencies) {
     const started = Date.now();
     const requestId = context.awsRequestId ?? event.requestContext?.requestId ?? randomUUID();
     const [method, path] = methodAndPath(event);
-    const origin = originFor(event, deps.config.ALLOWED_ORIGIN);
+    const origin = originFor(event, deps.config.ALLOWED_ORIGINS);
     let stream: Writable | undefined;
     let outcome = "unknown";
     let evidenceCount = 0;

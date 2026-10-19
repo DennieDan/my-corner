@@ -17,6 +17,9 @@ const EMBEDDING_MODEL_ID = "cohere.embed-multilingual-v3";
 const EMBEDDING_DIMENSIONS = 1024;
 
 export class KnowledgeStack extends Stack {
+  public readonly knowledgeBaseId: string;
+  public readonly knowledgeBaseArn: string;
+
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -191,6 +194,8 @@ export class KnowledgeStack extends Stack {
       vectorBucketPolicy,
       vectorIndex,
     );
+    this.knowledgeBaseId = knowledgeBase.attrKnowledgeBaseId;
+    this.knowledgeBaseArn = knowledgeBase.attrKnowledgeBaseArn;
 
     const dataSource = new bedrock.CfnDataSource(
       this,

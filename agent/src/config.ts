@@ -8,7 +8,8 @@ const configSchema = z.object({
   BEDROCK_KNOWLEDGE_BASE_ID: z.string().min(1),
   OPENAI_API_KEY_SECRET_ARN: z.string().min(1),
   OPENAI_MODEL: z.string().min(1).default("gpt-5.6-luna"),
-  ALLOWED_ORIGIN: z.string().url(),
+  ALLOWED_ORIGINS: z.string().transform((value) => value.split(",").map((origin) => origin.trim()))
+    .pipe(z.array(z.string().url().refine((origin) => new URL(origin).origin === origin)).min(1)),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
 

@@ -22,7 +22,8 @@
     "knowledge:upload": "node --env-file .env.local --import tsx scripts/upload-knowledge.ts",
     "knowledge:sync": "node --env-file .env.local --import tsx scripts/sync-knowledge.ts",
     "knowledge:ingest": "node --env-file .env.local --import tsx scripts/ingest-knowledge.ts",
-    "knowledge:retrieve": "node --env-file .env.local --import tsx scripts/retrieve-knowledge.ts"
+    "knowledge:retrieve": "node --env-file .env.local --import tsx scripts/retrieve-knowledge.ts",
+    "agent:smoke": "node --import tsx scripts/smoke-agent.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-agent": "^3.922.0",
@@ -35,6 +36,7 @@
     "@eslint/js": "^9.39.1",
     "@types/node": "^22.19.1",
     "aws-cdk": "^2.1031.0",
+    "esbuild": "^0.28.2",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "tsx": "^4.20.6",

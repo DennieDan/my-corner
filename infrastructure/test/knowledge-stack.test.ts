@@ -14,6 +14,8 @@ describe("KnowledgeStack", () => {
     const app = new App();
     Tags.of(app).add("Project", "Dennie");
     Tags.of(app).add("Environment", "development");
+    Tags.of(app).add("Name", "my-corner-chatbot");
+    Tags.of(app).add("Workload", "my-corner-chatbot");
 
     const stack = new KnowledgeStack(app, "Dennie-development-Knowledge", {
       env: { account: ACCOUNT, region: REGION },
@@ -55,6 +57,7 @@ describe("KnowledgeStack", () => {
         Tags: Match.arrayWith([
           { Key: "Name", Value: "my-corner-knowledge-base" },
           { Key: "Project", Value: "Learning" },
+          { Key: "Workload", Value: "my-corner-chatbot" },
         ]),
         VersioningConfiguration: { Status: "Enabled" },
       },
@@ -83,6 +86,7 @@ describe("KnowledgeStack", () => {
         Tags: Match.arrayWith([
           { Key: "Name", Value: "my-corner-knowledge-base" },
           { Key: "Project", Value: "Learning" },
+          { Key: "Workload", Value: "my-corner-chatbot" },
         ]),
       },
     });
@@ -103,6 +107,7 @@ describe("KnowledgeStack", () => {
         Tags: Match.arrayWith([
           { Key: "Name", Value: "my-corner-knowledge-base" },
           { Key: "Project", Value: "Learning" },
+          { Key: "Workload", Value: "my-corner-chatbot" },
         ]),
         VectorBucketArn: {
           "Fn::GetAtt": [
@@ -141,6 +146,7 @@ describe("KnowledgeStack", () => {
       Tags: {
         Environment: "development",
         Name: "my-corner-knowledge-base",
+        Workload: "my-corner-chatbot",
         Project: "Learning",
       },
     });
