@@ -131,6 +131,8 @@ describe("evaluateRetrieval", () => {
       hitRateAt3: { hits: 2, total: 3, rate: 2 / 3 },
       hitRateAt5: { hits: 2, total: 3, rate: 2 / 3 },
       meanReciprocalRank: (1 + 1 / 3) / 3,
+      allSourceGroupsHitRateAt5: { hits: 2, total: 3, rate: 2 / 3 },
+      meanSourceGroupCoverageAt5: 2 / 3,
     });
     expect(evaluation.summary.scoreDistributions.expectedResults.count).toBe(2);
     expect(evaluation.summary.scoreDistributions.topResultPerUnanswerableQuestion).toMatchObject({
@@ -170,6 +172,87 @@ describe("evaluateRetrieval", () => {
         })],
       }),
     ]);
+  });
+
+  it("requires every source group while allowing alternatives within a group", () => {
+    const evaluation = evaluateRetrieval([
+      {
+        id: "complete-multi-source",
+        language: "en",
+        sourceHintGroups: [
+          ["timeline:2020-01"],
+          ["project:a", "project:b"],
+        ],
+        results: [
+          result(1, "source:project-b", 0.9),
+          result(3, "source:education", 0.8),
+        ],
+      },
+      {
+        id: "partial-multi-source",
+        language: "vi",
+        question: "Needs education and a project",
+        sourceHintGroups: [
+          ["timeline:2020-01"],
+          ["project:a", "project:b"],
+        ],
+        results: [
+          result(1, "source:project-a", 0.85),
+          result(6, "source:education", 0.7),
+        ],
+      },
+    ], sources);
+
+    expect(evaluation.queries["complete-multi-source"]).toMatchObject({
+      sourceHintGroupResolutions: [
+        { sourceHints: ["timeline:2020-01"], sourceIds: ["source:education"] },
+        {
+          sourceHints: ["project:a", "project:b"],
+          sourceIds: ["source:project-a", "source:project-b"],
+        },
+      ],
+      sourceGroupCoverageAt1: { covered: 1, total: 2, rate: 0.5 },
+      sourceGroupCoverageAt3: { covered: 2, total: 2, rate: 1 },
+      sourceGroupCoverageAt5: { covered: 2, total: 2, rate: 1 },
+      allSourceGroupsHitAt1: false,
+      allSourceGroupsHitAt3: true,
+      allSourceGroupsHitAt5: true,
+    });
+    expect(evaluation.queries["partial-multi-source"]).toMatchObject({
+      hitAt1: true,
+      hitAt5: true,
+      sourceGroupCoverageAt5: { covered: 1, total: 2, rate: 0.5 },
+      allSourceGroupsHitAt5: false,
+    });
+    expect(evaluation.summary).toMatchObject({
+      hitRateAt5: { hits: 2, total: 2, rate: 1 },
+      allSourceGroupsHitRateAt3: { hits: 1, total: 2, rate: 0.5 },
+      allSourceGroupsHitRateAt5: { hits: 1, total: 2, rate: 0.5 },
+      meanSourceGroupCoverageAt5: 0.75,
+    });
+    expect(evaluation.failures).toContainEqual(expect.objectContaining({
+      questionId: "partial-multi-source",
+      reason: "required-source-groups-not-in-top-5",
+      missingSourceHintGroups: [{
+        sourceHints: ["timeline:2020-01"],
+        sourceIds: ["source:education"],
+      }],
+    }));
+  });
+
+  it("rejects ambiguous or empty source-group declarations", () => {
+    expect(() => evaluateRetrieval([{
+      id: "both-fields",
+      sourceHints: ["project:a"],
+      sourceHintGroups: [["project:a"]],
+      results: [],
+    }], sources)).toThrow("cannot use both sourceHints and sourceHintGroups");
+
+    expect(() => evaluateRetrieval([{
+      id: "empty-group",
+      sourceHintGroups: [[]],
+      results: [],
+    }], sources)).toThrow("sourceHintGroups must contain non-empty groups");
   });
 
   it("excludes retrieval failures from hit-rate and MRR denominators", () => {

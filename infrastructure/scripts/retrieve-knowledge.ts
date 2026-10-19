@@ -23,6 +23,7 @@ interface EvaluationQuestion {
   question: string;
   expectedBehavior?: string;
   sourceHints?: string[];
+  sourceHintGroups?: string[][];
 }
 
 interface RecordedQuery {
@@ -32,6 +33,7 @@ interface RecordedQuery {
   question: string;
   expectedBehavior?: string;
   sourceHints?: string[];
+  sourceHintGroups?: string[][];
   retrievedAt: string;
   durationMs: number;
   resultCount: number;
@@ -128,7 +130,7 @@ const outputQueries = recordedQueries.map((query) => ({
   ...(evaluation ? { evaluation: evaluation.queries[query.id] } : {}),
 }));
 const output = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedAt,
   mode: options.mode,
   configuration: {

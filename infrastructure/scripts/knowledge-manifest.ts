@@ -208,9 +208,34 @@ export async function loadAndValidateKnowledge(
   const questions = (await readFile(questionsPath, "utf8"))
     .split("\n")
     .filter(Boolean)
-    .map((line) => JSON.parse(line) as { id: string; sourceHints: string[] });
+    .map((line) => JSON.parse(line) as {
+      id: string;
+      sourceHints?: string[];
+      sourceHintGroups?: string[][];
+    });
+  for (const question of questions) {
+    if (question.sourceHints !== undefined && question.sourceHintGroups !== undefined) {
+      throw new Error(
+        `Evaluation question ${question.id} cannot use both sourceHints and sourceHintGroups`,
+      );
+    }
+    if (question.sourceHints !== undefined) {
+      assertStringArray(question.sourceHints, `${question.id}.sourceHints`);
+    }
+    if (question.sourceHintGroups !== undefined) {
+      if (!Array.isArray(question.sourceHintGroups) || question.sourceHintGroups.length === 0) {
+        throw new Error(`${question.id}.sourceHintGroups must be a non-empty array`);
+      }
+      question.sourceHintGroups.forEach((group, groupIndex) =>
+        assertStringArray(group, `${question.id}.sourceHintGroups[${groupIndex}]`)
+      );
+      if (question.sourceHintGroups.some((group) => group.length === 0)) {
+        throw new Error(`${question.id}.sourceHintGroups cannot contain an empty group`);
+      }
+    }
+  }
   const missingAliases = questions.flatMap((question) =>
-    question.sourceHints
+    (question.sourceHintGroups?.flat() ?? question.sourceHints ?? [])
       .filter((hint) => !knownAliases.has(hint))
       .map((hint) => `${question.id}: ${hint}`),
   );

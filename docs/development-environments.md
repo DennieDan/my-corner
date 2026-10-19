@@ -70,7 +70,7 @@ aws bedrock-agent-runtime retrieve \
 
 The validation command checks the source registry, document/sidecar pairs, required metadata, and evaluation source coverage. The upload command sends only registered and owner-approved Markdown documents and Bedrock metadata sidecars to the configured private bucket and prefix; it refuses pending drafts. The ingest command runs approved-only validation, upload, and synchronization in order and stops immediately if any step fails. The sync step starts a Bedrock Knowledge Base ingestion job, reports its job ID, final statistics, and failure reasons, and waits up to 15 minutes by default. Set `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` to a positive number to override that timeout. The retrieval command calls the Bedrock `Retrieve` API directly; bulk mode reads `evaluations/questions.jsonl`. Timestamped retrieval JSON is written under the ignored `evaluations/results/retrieval/` directory. Terminal logs contain question IDs and result counts but not retrieved chunk text. Evaluation responses are written under the ignored `evaluations/results/` directory.
 
-Bulk retrieval resolves each question's source hints through the source registry and records the acceptable canonical source IDs. Its `evaluationSummary` contains collective and per-language Hit@1, Hit@3, Hit@5, mean reciprocal rank, and score distributions. Rates are decimals from 0 to 1. Each successfully retrieved unanswerable question records its strongest returned candidate as `strongestIrrelevantResult`. `evaluationFailures` lists retrieval errors and answerable questions whose expected sources missed the top five, together with expected and returned source rankings and scores. Questions whose Bedrock request fails are marked `evaluated: false` and excluded from metric denominators rather than being counted as retrieval misses.
+Bulk retrieval resolves each question's source hints through the source registry and records the acceptable canonical source IDs. A flat `sourceHints` list means that any listed hint is acceptable. Multi-source questions use `sourceHintGroups`: every outer group is required, while any hint within one group may satisfy that group. Its `evaluationSummary` contains collective and per-language Hit@1, Hit@3, Hit@5, mean reciprocal rank, all-source-group hit rates, mean source-group coverage, and score distributions. Rates are decimals from 0 to 1. The original Hit@K metrics continue to measure whether any expected source appeared, while `allSourceGroupsHitRateAtK` measures whether every required evidence group appeared. Each successfully retrieved unanswerable question records its strongest returned candidate as `strongestIrrelevantResult`. `evaluationFailures` lists retrieval errors, single-group questions whose expected sources missed the top five, and multi-source questions with missing required groups, together with expected and returned source rankings and scores. Questions whose Bedrock request fails are marked `evaluated: false` and excluded from metric denominators rather than being counted as retrieval misses.
 
 Strongest Irrelevant Score: 0.68
 
@@ -81,6 +81,15 @@ Rank 1 retrieved chunk for an unanswerable question is maximum 0.68. So our thre
 | Collective |        73 |         56 |           17 |
 | English    |        57 |         45 |           12 |
 | Vietnamese |        16 |         11 |            5 |
+
+### Runtime decision
+
+1. Apply security/restricted/out-of-scope policy.
+2. Retrieve 12 semantically.
+3. Remove chunks below 0.65.
+4. Pass at most 12 chunks to OpenAI.
+5. Instruct OpenAI to use only explicit evidence.
+6. If the requested fact is absent, state that it is unavailable.
 
 ## Environment variable contract
 

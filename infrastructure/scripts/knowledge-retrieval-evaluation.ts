@@ -10,6 +10,7 @@ export interface RetrievalEvaluationQuery {
   language?: string;
   question?: string;
   sourceHints?: string[];
+  sourceHintGroups?: string[][];
   results: RecordedRetrievalResult[];
   error?: unknown;
 }
@@ -19,10 +20,22 @@ export interface SourceHintResolution {
   sourceIds: string[];
 }
 
+export interface SourceHintGroupResolution {
+  sourceHints: string[];
+  sourceIds: string[];
+}
+
+export interface SourceGroupCoverage {
+  covered: number;
+  total: number;
+  rate: number;
+}
+
 export interface QueryRetrievalEvaluation {
   answerable: boolean;
   evaluated: boolean;
   sourceHintResolutions: SourceHintResolution[];
+  sourceHintGroupResolutions: SourceHintGroupResolution[];
   expectedSourceIds: string[];
   firstExpectedRank: number | null;
   firstExpectedScore: number | null;
@@ -30,6 +43,12 @@ export interface QueryRetrievalEvaluation {
   hitAt3: boolean | null;
   hitAt5: boolean | null;
   reciprocalRank: number | null;
+  sourceGroupCoverageAt1: SourceGroupCoverage;
+  sourceGroupCoverageAt3: SourceGroupCoverage;
+  sourceGroupCoverageAt5: SourceGroupCoverage;
+  allSourceGroupsHitAt1: boolean | null;
+  allSourceGroupsHitAt3: boolean | null;
+  allSourceGroupsHitAt5: boolean | null;
   strongestIrrelevantResult: EvaluatedSourceResult | null;
 }
 
@@ -65,6 +84,12 @@ export interface RetrievalMetricGroupSummary {
   hitRateAt3: { hits: number; total: number; rate: number };
   hitRateAt5: { hits: number; total: number; rate: number };
   meanReciprocalRank: number;
+  allSourceGroupsHitRateAt1: { hits: number; total: number; rate: number };
+  allSourceGroupsHitRateAt3: { hits: number; total: number; rate: number };
+  allSourceGroupsHitRateAt5: { hits: number; total: number; rate: number };
+  meanSourceGroupCoverageAt1: number;
+  meanSourceGroupCoverageAt3: number;
+  meanSourceGroupCoverageAt5: number;
   scoreDistributions: {
     allResults: DistributionSummary;
     expectedResults: DistributionSummary;
@@ -83,8 +108,13 @@ export interface RetrievalFailure {
   questionId: string;
   language: string | null;
   question: string;
-  reason: "retrieval-error" | "expected-source-not-in-top-5";
+  reason:
+    | "retrieval-error"
+    | "expected-source-not-in-top-5"
+    | "required-source-groups-not-in-top-5";
   sourceHintResolutions: SourceHintResolution[];
+  sourceHintGroupResolutions: SourceHintGroupResolution[];
+  missingSourceHintGroups: SourceHintGroupResolution[];
   expectedSourceIds: string[];
   returnedSources: EvaluatedSourceResult[];
   error?: unknown;
@@ -125,6 +155,41 @@ export function resolveSourceHints(
     }
     return { sourceHint, sourceIds };
   });
+}
+
+function resolveSourceHintGroups(
+  query: RetrievalEvaluationQuery,
+  sourceHintIndex: ReadonlyMap<string, string[]>,
+): {
+  sourceHintResolutions: SourceHintResolution[];
+  sourceHintGroupResolutions: SourceHintGroupResolution[];
+} {
+  if (query.sourceHints !== undefined && query.sourceHintGroups !== undefined) {
+    throw new Error(`Evaluation question ${query.id} cannot use both sourceHints and sourceHintGroups`);
+  }
+
+  const groups = query.sourceHintGroups ?? (
+    query.sourceHints && query.sourceHints.length > 0 ? [query.sourceHints] : []
+  );
+  if (groups.some((group) => !Array.isArray(group) || group.length === 0)) {
+    throw new Error(`Evaluation question ${query.id} sourceHintGroups must contain non-empty groups`);
+  }
+
+  const sourceHintResolutions = resolveSourceHints(groups.flat(), sourceHintIndex);
+  let resolutionIndex = 0;
+  const sourceHintGroupResolutions = groups.map((sourceHints) => {
+    const resolutions = sourceHintResolutions.slice(
+      resolutionIndex,
+      resolutionIndex + sourceHints.length,
+    );
+    resolutionIndex += sourceHints.length;
+    return {
+      sourceHints,
+      sourceIds: [...new Set(resolutions.flatMap((resolution) => resolution.sourceIds))].sort(),
+    };
+  });
+
+  return { sourceHintResolutions, sourceHintGroupResolutions };
 }
 
 function quantile(sortedValues: number[], percentile: number): number | null {
@@ -170,6 +235,49 @@ function hitRate(
     hits,
     total: evaluated.length,
     rate: evaluated.length > 0 ? hits / evaluated.length : 0,
+  };
+}
+
+function allSourceGroupsHitRate(
+  evaluations: QueryRetrievalEvaluation[],
+  key: "allSourceGroupsHitAt1" | "allSourceGroupsHitAt3" | "allSourceGroupsHitAt5",
+): { hits: number; total: number; rate: number } {
+  const evaluated = evaluations.filter((evaluation) => evaluation.evaluated);
+  const hits = evaluated.filter((evaluation) => evaluation[key] === true).length;
+  return {
+    hits,
+    total: evaluated.length,
+    rate: evaluated.length > 0 ? hits / evaluated.length : 0,
+  };
+}
+
+function meanSourceGroupCoverage(
+  evaluations: QueryRetrievalEvaluation[],
+  key: "sourceGroupCoverageAt1" | "sourceGroupCoverageAt3" | "sourceGroupCoverageAt5",
+): number {
+  const evaluated = evaluations.filter((evaluation) => evaluation.evaluated);
+  return evaluated.length > 0
+    ? evaluated.reduce((total, evaluation) => total + evaluation[key].rate, 0) / evaluated.length
+    : 0;
+}
+
+function sourceGroupCoverage(
+  groups: SourceHintGroupResolution[],
+  results: RecordedRetrievalResult[],
+  maximumRank: number,
+): SourceGroupCoverage {
+  const returnedSourceIds = new Set(
+    results
+      .filter((result) => result.rank <= maximumRank && result.sourceId !== null)
+      .map((result) => result.sourceId as string),
+  );
+  const covered = groups.filter((group) =>
+    group.sourceIds.some((sourceId) => returnedSourceIds.has(sourceId))
+  ).length;
+  return {
+    covered,
+    total: groups.length,
+    rate: groups.length > 0 ? covered / groups.length : 0,
   };
 }
 
@@ -241,6 +349,30 @@ function summarizeQueryGroup(
         0,
       ) / evaluatedAnswerable.length
       : 0,
+    allSourceGroupsHitRateAt1: allSourceGroupsHitRate(
+      answerableEvaluations,
+      "allSourceGroupsHitAt1",
+    ),
+    allSourceGroupsHitRateAt3: allSourceGroupsHitRate(
+      answerableEvaluations,
+      "allSourceGroupsHitAt3",
+    ),
+    allSourceGroupsHitRateAt5: allSourceGroupsHitRate(
+      answerableEvaluations,
+      "allSourceGroupsHitAt5",
+    ),
+    meanSourceGroupCoverageAt1: meanSourceGroupCoverage(
+      answerableEvaluations,
+      "sourceGroupCoverageAt1",
+    ),
+    meanSourceGroupCoverageAt3: meanSourceGroupCoverage(
+      answerableEvaluations,
+      "sourceGroupCoverageAt3",
+    ),
+    meanSourceGroupCoverageAt5: meanSourceGroupCoverage(
+      answerableEvaluations,
+      "sourceGroupCoverageAt5",
+    ),
     scoreDistributions: {
       allResults: summarizeDistribution(allScores),
       expectedResults: summarizeDistribution(expectedScores),
@@ -264,7 +396,10 @@ export function evaluateRetrieval(
       throw new Error(`Duplicate evaluation question ID: ${query.id}`);
     }
 
-    const sourceHintResolutions = resolveSourceHints(query.sourceHints ?? [], sourceHintIndex);
+    const { sourceHintResolutions, sourceHintGroupResolutions } = resolveSourceHintGroups(
+      query,
+      sourceHintIndex,
+    );
     const expectedSourceIds = [...new Set(
       sourceHintResolutions.flatMap((resolution) => resolution.sourceIds),
     )].sort();
@@ -283,10 +418,26 @@ export function evaluateRetrieval(
     const strongestReturnedResult = query.results
       .slice()
       .sort((left, right) => left.rank - right.rank)[0];
+    const sourceGroupCoverageAt1 = sourceGroupCoverage(
+      sourceHintGroupResolutions,
+      query.results,
+      1,
+    );
+    const sourceGroupCoverageAt3 = sourceGroupCoverage(
+      sourceHintGroupResolutions,
+      query.results,
+      3,
+    );
+    const sourceGroupCoverageAt5 = sourceGroupCoverage(
+      sourceHintGroupResolutions,
+      query.results,
+      5,
+    );
     const evaluation: QueryRetrievalEvaluation = {
       answerable,
       evaluated,
       sourceHintResolutions,
+      sourceHintGroupResolutions,
       expectedSourceIds,
       firstExpectedRank,
       firstExpectedScore,
@@ -294,6 +445,12 @@ export function evaluateRetrieval(
       hitAt3: evaluated ? firstExpectedRank !== null && firstExpectedRank <= 3 : null,
       hitAt5: evaluated ? firstExpectedRank !== null && firstExpectedRank <= 5 : null,
       reciprocalRank: evaluated ? firstExpectedRank === null ? 0 : 1 / firstExpectedRank : null,
+      sourceGroupCoverageAt1,
+      sourceGroupCoverageAt3,
+      sourceGroupCoverageAt5,
+      allSourceGroupsHitAt1: evaluated ? sourceGroupCoverageAt1.rate === 1 : null,
+      allSourceGroupsHitAt3: evaluated ? sourceGroupCoverageAt3.rate === 1 : null,
+      allSourceGroupsHitAt5: evaluated ? sourceGroupCoverageAt5.rate === 1 : null,
       strongestIrrelevantResult: !answerable && evaluated && strongestReturnedResult
         ? evaluatedSourceResult(strongestReturnedResult)
         : null,
@@ -311,9 +468,13 @@ export function evaluateRetrieval(
   ]));
   const failures: RetrievalFailure[] = queries.flatMap((query) => {
     const evaluation = queryEvaluations[query.id] as QueryRetrievalEvaluation;
+    const hasMultipleRequiredGroups = evaluation.sourceHintGroupResolutions.length > 1;
     const reason = !evaluation.evaluated
       ? "retrieval-error"
-      : evaluation.answerable && evaluation.hitAt5 === false
+      : evaluation.answerable && hasMultipleRequiredGroups &&
+          evaluation.allSourceGroupsHitAt5 === false
+        ? "required-source-groups-not-in-top-5"
+        : evaluation.answerable && evaluation.hitAt5 === false
         ? "expected-source-not-in-top-5"
         : null;
     if (!reason) {
@@ -325,6 +486,12 @@ export function evaluateRetrieval(
       question: query.question ?? "",
       reason,
       sourceHintResolutions: evaluation.sourceHintResolutions,
+      sourceHintGroupResolutions: evaluation.sourceHintGroupResolutions,
+      missingSourceHintGroups: evaluation.sourceHintGroupResolutions.filter((group) =>
+        !group.sourceIds.some((sourceId) => query.results.some(
+          (result) => result.rank <= 5 && result.sourceId === sourceId,
+        ))
+      ),
       expectedSourceIds: evaluation.expectedSourceIds,
       returnedSources: query.results
         .slice()

@@ -386,6 +386,20 @@ Suggested starting documents:
 - Unanswerable questions generally return no strong evidence above the selected threshold.
 - Retrieved results include enough metadata to build valid citations.
 
+#### Completion Records
+
+**Status:** Complete with documented limitations on 10 August 2026.
+
+- Baseline report: [`docs/phase-4-baseline-retrieval-report.md`](./phase-4-baseline-retrieval-report.md).
+- Final ingestion job: `FATRZMBDO5` (`COMPLETE`), with 14 documents and 14 metadata documents scanned, 3 modified documents indexed, and 0 failed documents.
+- Evaluation bank: 73 questions — 57 English and 16 Vietnamese; 56 have expected source evidence.
+- Selected 12-result semantic run: conventional Hit@1 78.6%, Hit@3 94.6%, and Hit@5 100%; complete required-source-group Hit@5 91.1% collectively, 93.3% for English, and 81.8% for Vietnamese.
+- Selected configuration: explicit `SEMANTIC` search, request 12 candidates, apply a 0.65 candidate-quality floor, and pass at most 12 retained chunks to OpenAI.
+- Hybrid search is unsupported by the configured Bedrock index.
+- A score is not an answer/refusal decision: answerable and unanswerable score ranges overlap. Phase 5 must enforce policy separately and require explicit evidence before answering.
+- Five broad multi-source cases missed at least one required group in the top five; four were complete by rank 12. The remaining over-constrained timeline case and general multi-source retrieval are documented for evaluation normalization and query-decomposition remediation.
+- The Phase 4 collective top-five target is met. Vietnamese multi-source coverage, generation groundedness, citation accuracy, latency, and token cost remain Phase 5/8 evaluation targets.
+
 ---
 
 ### Phase 5 - Build the Lambda RAG agent
