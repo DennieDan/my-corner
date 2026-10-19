@@ -6,7 +6,7 @@ import { SYSTEM_PROMPT } from "./prompt.js";
 export interface Usage { input_tokens?: number; output_tokens?: number }
 export interface AnswerStream { deltas: AsyncIterable<string>; usage: Usage }
 export interface AnswerProvider {
-  stream(input: string, model: string, signal: AbortSignal): Promise<AnswerStream>;
+  stream(input: string, model: string, signal: AbortSignal, reasoningEffort?: "none" | "low"): Promise<AnswerStream>;
 }
 
 export interface KeyProvider {
@@ -51,7 +51,7 @@ export class OpenAIAnswerProvider implements AnswerProvider {
     private readonly fetcher: typeof fetch = fetch,
   ) {}
 
-  async stream(input: string, model: string, signal: AbortSignal): Promise<AnswerStream> {
+  async stream(input: string, model: string, signal: AbortSignal, reasoningEffort: "none" | "low" = "none"): Promise<AnswerStream> {
     const apiKey = await this.keys.get(signal);
     const response = await retryTransient(async () => {
       let result: Response;
@@ -61,7 +61,7 @@ export class OpenAIAnswerProvider implements AnswerProvider {
           headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
           body: JSON.stringify({
             model,
-            reasoning: { effort: "none" },
+            reasoning: { effort: reasoningEffort },
             store: false,
             stream: true,
             max_output_tokens: 800,

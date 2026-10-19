@@ -123,7 +123,7 @@ export function createHandler(deps: Dependencies) {
       }
       const generation = operationSignal(deadline.signal, 15_000);
       try {
-        const answer = await deps.answers.stream(buildInput(request, evidence), deps.config.OPENAI_MODEL, generation.signal);
+        const answer = await deps.answers.stream(buildInput(request, evidence), deps.config.OPENAI_MODEL, generation.signal, deps.config.OPENAI_REASONING_EFFORT);
         const gate = new CitationGate(new Set(evidence.map(({ id }) => id)));
         for await (const delta of answer.deltas) {
           if (generation.signal.aborted) throw generation.signal.reason;

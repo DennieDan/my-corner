@@ -23,6 +23,7 @@ describe("AgentStack", () => {
       Runtime: "nodejs24.x", Architectures: ["arm64"], MemorySize: 1024, Timeout: 30,
       Environment: { Variables: Match.objectLike({
         BEDROCK_KNOWLEDGE_BASE_ID: "kb-test",
+        OPENAI_REASONING_EFFORT: "low",
         ALLOWED_ORIGINS: "https://dandinh.net,http://localhost:3000",
       }) },
     });
@@ -46,5 +47,11 @@ describe("AgentStack", () => {
     expect(JSON.stringify(built.findResources("AWS::ApiGateway::Method"))).toContain("response-streaming-invocations");
     built.resourceCountIs("AWS::SecretsManager::Secret", 1);
     built.hasResourceProperties("AWS::Logs::LogGroup", { RetentionInDays: 30 });
+    const policies = JSON.stringify(built.findResources("AWS::IAM::Policy"));
+    expect(policies).toContain("secretsmanager:GetSecretValue");
+    expect(policies).not.toContain('"Action":"*"');
+    const stages = JSON.stringify(built.findResources("AWS::ApiGateway::Stage"));
+    expect(stages).toContain('"DataTraceEnabled":false');
+    expect(stages).not.toContain("$context.requestBody");
   });
 });

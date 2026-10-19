@@ -11,6 +11,14 @@ function events(body: string): string[] {
   return body.split(/\r?\n\r?\n/).map((frame) => frame.match(/^event: (\w+)/m)?.[1]).filter((name): name is string => !!name);
 }
 
+function frames(body: string): { event: string; data: Record<string, unknown> }[] {
+  return body.split(/\r?\n\r?\n/).flatMap((frame) => {
+    const event = frame.match(/^event: (\w+)/m)?.[1];
+    const data = frame.match(/^data: (.+)$/m)?.[1];
+    return event && data ? [{ event, data: JSON.parse(data) as Record<string, unknown> }] : [];
+  });
+}
+
 const health = await fetch(healthUrl);
 assert.equal(health.status, 200);
 assert.deepEqual(await health.json(), { status: "ok" });
@@ -53,11 +61,20 @@ if (process.env.SMOKE_LIVE === "1") {
     body: JSON.stringify({ message: "What does Dan study?", sessionId: "smoke-live-123" }),
   });
   assert.equal(live.status, 200);
-  const sequence = events(await live.text());
+  const response = await live.text();
+  const sequence = events(response);
   assert.equal(sequence[0], "sources");
   assert.ok(sequence.includes("delta"));
   assert.equal(sequence.at(-1), "done");
   assert.ok(!sequence.includes("error"));
+  const parsed = frames(response);
+  const sources = parsed[0].data.sources as { id: string }[];
+  const labels = new Set(sources.map((source) => source.id));
+  const answer = parsed.filter((frame) => frame.event === "delta").map((frame) => frame.data.text).join("");
+  assert.match(answer, /\[S\d+\]/);
+  for (const match of answer.matchAll(/\[(S\d+(?:,\s*S\d+)*)\]/g)) {
+    for (const label of match[1].split(/,\s*/)) assert.ok(labels.has(label), `Unknown citation ${label}`);
+  }
 }
 
 process.stdout.write(`Agent smoke test passed${process.env.SMOKE_LIVE === "1" ? " (including live generation)" : " (without provider calls)"}.\n`);

@@ -68,6 +68,7 @@ export class AgentStack extends Stack {
         BEDROCK_KNOWLEDGE_BASE_ID: props.knowledgeBaseId,
         OPENAI_API_KEY_SECRET_ARN: secret.secretArn,
         OPENAI_MODEL: "gpt-5.6-luna",
+        OPENAI_REASONING_EFFORT: "low",
         ALLOWED_ORIGINS: props.config.allowedOrigins.join(","),
         LOG_LEVEL: "info",
       },

@@ -12,6 +12,8 @@ The development deployment adds a Node.js 24 ARM64 Lambda, a Regional REST API t
 
 The deployed basic smoke checks pass. A retrieval-backed request returned ten labeled sources and a safe `UPSTREAM_UNAVAILABLE` SSE event with the placeholder key. That failure emitted the `ProviderFailures` metric and moved its alarm to `ALARM`. Successful answer generation remains to be verified after the key is installed.
 
+Phase 8 update (19 October 2026): the development key is configured, live generation and citation checks pass, and the selected `low` reasoning configuration is deployed. See [the Phase 8 evaluation report](phase-8-evaluation-report.md) for current results.
+
 ## Prepare and deploy
 
 From the repository root:

@@ -111,6 +111,7 @@ Rank 1 retrieved chunk for an unanswerable question is maximum 0.68. So our thre
 | `KNOWLEDGE_INGESTION_TIMEOUT_SECONDS` | Sync                 | Maximum ingestion wait, default `900`            | No     |
 | `OPENAI_API_KEY_SECRET_ARN`           | Agent                | Secrets Manager ARN containing the OpenAI key    | No     |
 | `OPENAI_MODEL`                        | Agent                | OpenAI model name, default `gpt-5.6-luna`        | No     |
+| `OPENAI_REASONING_EFFORT`             | Agent                | `none` or `low`, default `low`                  | No     |
 | `ALLOWED_ORIGINS`                     | Agent                | Comma-separated exact browser origins allowed by CORS | No |
 | `LOG_LEVEL`                           | Agent                | `debug`, `info`, `warn`, or `error`              | No     |
 | `AGENT_API_URL`                       | Evaluations          | Full chat endpoint used by the runner            | No     |

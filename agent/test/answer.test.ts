@@ -36,6 +36,12 @@ describe("OpenAI Responses stream", () => {
     expect(JSON.parse(fetcher.mock.calls[0][1]?.body as string)).toMatchObject({ stream: true, store: false,
       reasoning: { effort: "none" } });
 
+    const lowFetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(stream('data: {"type":"response.completed"}\n\n')));
+    const low = await new OpenAIAnswerProvider({ get: async () => "test-key" }, lowFetcher)
+      .stream("question", "model", new AbortController().signal, "low");
+    for await (const delta of low.deltas) { expect(delta).toBe(""); }
+    expect(JSON.parse(lowFetcher.mock.calls[0][1]?.body as string)).toMatchObject({ reasoning: { effort: "low" } });
+
     const quota = vi.fn<typeof fetch>().mockResolvedValue(new Response(null, { status: 429 }));
     await expect(new OpenAIAnswerProvider({ get: async () => "test-key" }, quota)
       .stream("question", "model", new AbortController().signal)).rejects.toThrow("UPSTREAM_UNAVAILABLE");

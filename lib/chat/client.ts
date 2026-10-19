@@ -12,8 +12,8 @@ export interface HistoryMessage {
 export type ChatEvent =
   | { type: "sources"; sources: ChatSource[] }
   | { type: "delta"; text: string }
-  | { type: "done" }
-  | { type: "error"; message: string };
+  | { type: "done"; usage?: { input_tokens?: number; output_tokens?: number } }
+  | { type: "error"; code?: string; message: string };
 
 export const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_HISTORY_MESSAGES = 12;
@@ -63,8 +63,15 @@ export function parseFrame(frame: string): ChatEvent | null {
     return { type: "sources", sources: value.sources.map(safeSource).filter((item): item is ChatSource => !!item).slice(0, 12) };
   }
   if (event === "delta" && typeof value.text === "string") return { type: "delta", text: value.text };
-  if (event === "done") return { type: "done" };
-  if (event === "error") return { type: "error", message: typeof value.message === "string" ? value.message : "Dennie is temporarily unavailable." };
+  if (event === "done") {
+    const raw = value.usage && typeof value.usage === "object" ? value.usage as Record<string, unknown> : null;
+    const usage = raw ? {
+      ...(typeof raw.input_tokens === "number" ? { input_tokens: raw.input_tokens } : {}),
+      ...(typeof raw.output_tokens === "number" ? { output_tokens: raw.output_tokens } : {}),
+    } : undefined;
+    return { type: "done", ...(usage ? { usage } : {}) };
+  }
+  if (event === "error") return { type: "error", ...(typeof value.code === "string" ? { code: value.code } : {}), message: typeof value.message === "string" ? value.message : "Dennie is temporarily unavailable." };
   return null;
 }
 
