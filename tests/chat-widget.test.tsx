@@ -55,10 +55,10 @@ describe("Dennie chat widget", () => {
     finish();
     await waitFor(() => expect(screen.getByRole("status").textContent).toContain("finished"));
     expect(screen.getByLabelText("Conversation").textContent).toContain("Dan builds websites");
-    expect(JSON.parse(localStorage.getItem("dennie:history:v1") ?? "[]")).toHaveLength(2);
+    expect(JSON.parse(localStorage.getItem("dennie:history:v2") ?? "{}").messages).toHaveLength(2);
     await userEvent.click(screen.getByRole("button", { name: "Clear conversation" }));
     expect(screen.getByRole("status").textContent).toContain("cleared");
-    expect(JSON.parse(localStorage.getItem("dennie:history:v1") ?? "[]")).toHaveLength(0);
+    expect(localStorage.getItem("dennie:history:v2")).toBeNull();
   });
 
   it("shows a safe error and retries the pending question", async () => {
@@ -89,6 +89,18 @@ describe("Dennie chat widget", () => {
     await userEvent.click(screen.getByRole("button", { name: "Stop response" }));
     expect(screen.getByRole("status").textContent).toContain("stopped");
     expect(screen.getByLabelText("Conversation").textContent).not.toContain("partial answer");
-    expect(JSON.parse(localStorage.getItem("dennie:history:v1") ?? "[]")).toHaveLength(0);
+    expect(localStorage.getItem("dennie:history:v2")).toBeNull();
+  });
+
+  it("expires stored history and its session after seven days", async () => {
+    localStorage.setItem("dennie:history:v2", JSON.stringify({
+      savedAt: Date.now() - 8 * 24 * 60 * 60 * 1_000,
+      messages: [{ role: "user", content: "Old private text" }],
+    }));
+    localStorage.setItem("dennie:session:v2", "12345678-1234-1234-1234-000000000999");
+    openChat();
+    await waitFor(() => expect(localStorage.getItem("dennie:history:v2")).toBeNull());
+    expect(screen.getByLabelText("Conversation").textContent).not.toContain("Old private text");
+    expect(localStorage.getItem("dennie:session:v2")).not.toBe("12345678-1234-1234-1234-000000000999");
   });
 });

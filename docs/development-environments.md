@@ -26,7 +26,7 @@ npm run infra:build
 npm run infra:synth -- -c environment=development
 ```
 
-The root website build remains independent of the agent and infrastructure dependencies. Voiceflow stays in place until the custom chatbot passes the production cutover checks.
+The root website build remains independent of the agent and infrastructure dependencies. The custom Dennie widget is the only chat client in the website build.
 
 Phase 6 development deployment and handoff steps are in [phase-6-agent-deployment.md](phase-6-agent-deployment.md).
 

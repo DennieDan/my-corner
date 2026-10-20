@@ -151,7 +151,7 @@ These items do not block Phase 0 but must be resolved while constructing the aut
 2. The user-supplied education description and graduation date are authoritative over incomplete website wording.
 3. Being both an NUS staff member and student is approved for discussion, but only when supported by dated source material.
 4. Personal learning reflections, published grades, scholarship, hobbies, and swimming result are approved for discussion.
-5. The current chatbot information card still describes Voiceflow, 48-hour backend history, and an in-chat contact form. Replace it at custom-chatbot cutover.
+5. The chatbot information card was updated for the custom agent at cutover; keep its data-handling description aligned with the deployed code and provider terms.
 6. Reconcile project claims that differ between the résumé and website during corpus curation; retain source and effective-date metadata rather than combining claims blindly.
 
 ## 7. Contact behavior

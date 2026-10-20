@@ -58,6 +58,12 @@ function listFiles(directory) {
     return entry.isDirectory() ? listFiles(full) : [full];
   });
 }
+function assertCurrentSiteUsesCustomChat(out) {
+  for (const file of listFiles(out).filter((item) => /\.(?:html|js|json)$/.test(item))) {
+    assert.doesNotMatch(readFileSync(file, "utf8"), /voiceflow/i, `Obsolete chat code in ${path.relative(out, file)}`);
+  }
+  assert.match(readFileSync(path.join(out, "index.html"), "utf8"), /Chat with Dennie/);
+}
 function versions(bucket) {
   const listed = aws(["s3api", "list-object-versions", "--bucket", bucket]);
   return Object.fromEntries((listed.Versions || []).filter((item) => item.IsLatest).map((item) => [item.Key, item.VersionId]));
@@ -185,6 +191,7 @@ switch (command) {
     run("npm", ["run", "build"]);
     const out = path.join(root, "out");
     assert.ok(statSync(path.join(out, "index.html")).isFile());
+    assertCurrentSiteUsesCustomChat(out);
     const before = versions(bucket);
     run("aws", ["s3", "sync", out, `s3://${bucket}`, "--no-progress", "--exclude", "*.DS_Store"]);
     for (const file of listFiles(out).filter((item) => item.endsWith(".html"))) {
@@ -199,7 +206,9 @@ switch (command) {
     try {
       const html = await fetch("https://dandinh.net/dennie", { headers: { "cache-control": "no-cache" } });
       assert.equal(html.status, 200);
-      assert.match(await html.text(), /Dennie|Dan/i);
+      const published = await html.text();
+      assert.match(published, /Chat with Dennie/);
+      assert.doesNotMatch(published, /voiceflow/i);
       Object.assign(process.env, { AGENT_API_URL: c.chatUrl, SMOKE_ORIGIN: "https://dandinh.net", SMOKE_LIVE: "1" });
       run("npm", ["run", "agent:smoke"], { cwd: infra });
     } catch (error) {

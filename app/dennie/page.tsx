@@ -294,6 +294,14 @@ export default function DennieInfoCardPage() {
                 <p className="font-sans text-base leading-relaxed text-[#5a6b62]">
                   {data.training}
                 </p>
+                <a
+                  href="https://developers.openai.com/api/docs/guides/your-data"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-sans text-sm text-[#315d50] underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#315d50]"
+                >
+                  OpenAI API data controls <span className="sr-only">(opens in a new tab)</span>
+                </a>
               </div>
 
               <div>

@@ -5,7 +5,7 @@ export const dennieInfoCard = {
   deployer: siteMetadata.author,
   purpose:
     "Dennie is a generative AI chatbot on My Corner. It is solely intended to help visitors discover information about Dan Dinh.",
-  lastUpdated: "2026-10-19",
+  lastUpdated: "2026-10-20",
   version: "1.0",
   sections: [
     {
@@ -62,14 +62,15 @@ export const dennieInfoCard = {
       "Your current question, up to 12 recent messages, and a random browser session identifier are sent to the agent API",
     ],
     storage: [
-      "Up to 12 recent messages are kept in this browser's local storage until you clear them or your browser removes site data",
-      "The agent processes each request through AWS and OpenAI. It does not keep complete chat transcripts on the server",
-      "The agent records operational metrics without complete prompts or answers",
+      "Up to 12 recent messages are kept in this browser's local storage for at most seven days, or until you clear them or your browser removes site data",
+      "The question is sent to an AWS-hosted agent. AWS Bedrock retrieves relevant public source material, and the question, recent conversation, and selected sources are sent to OpenAI to generate an answer",
+      "The agent does not keep a server-side chat transcript. AWS CloudWatch keeps operational logs, including request IDs, outcomes, timing, token counts, and source IDs, for 30 days without complete prompts or answers",
+      "OpenAI's API may retain abuse-monitoring logs for up to 30 days under its data controls. The agent requests that OpenAI not store the generated response as application state",
     ],
     training:
-      "Conversations with Dennie are not used to train or fine-tune models.",
+      "Dennie's API request does not opt in to model training. OpenAI says API data is not used to train its models by default unless the API account separately opts in to data sharing.",
     controls: [
-      "You can clear chat history from the chat interface at any time. This removes the recent messages and random session identifier from this browser.",
+      "Select Clear conversation in the chat interface to remove recent messages and replace the random session identifier in this browser immediately. Clearing this browser does not delete data already processed by AWS or OpenAI.",
       "You can stop a response while it is streaming.",
     ],
   },

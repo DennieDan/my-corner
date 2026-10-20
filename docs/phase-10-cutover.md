@@ -1,0 +1,18 @@
+# Phase 10 cutover record
+
+## Current state (20 October 2026)
+
+The custom Dennie widget is the only chat client in the source and in the local static export. The obsolete Voiceflow widget, form extension, API routes, Lambda source, types, library, and deployment workflow have been removed. The local production build, type check, chat client tests, and widget tests pass. The pre-cutover Git revision is `71c76af1688f2c90f86edadbffb994d0f960dc08`.
+
+**The production cutover is not yet verified.** The AWS CLI session has expired, so this change has not been released to `dandinh.net`, production CloudWatch metrics have not been reviewed, and the separately deployed legacy Voiceflow Lambda has not been retired. Keep the pre-cutover revision and the versioned S3 release record until the observation period is complete.
+
+## Release and verification
+
+1. Renew AWS credentials for account `520070583275` in `ap-southeast-1` and confirm `aws sts get-caller-identity` returns that account. Confirm `NEXT_PUBLIC_AGENT_API_URL` resolves to the production `/v1/chat` endpoint. Follow [the Phase 9 release runbook](phase-9-release.md) to run `npm run release:website` with `S3_BUCKET_NAME` and `CLOUDFRONT_DISTRIBUTION_ID` set. Save the generated `.releases/website-production-*.json` record outside this ignored directory as the rollback point. The release command rejects a build that contains Voiceflow code and checks the published `/dennie` page for the custom launcher.
+2. From the real domain, open the chat on desktop and a narrow mobile viewport. Send an answerable question and follow a citation to its source. Send an unsupported/private question and check the refusal. Stop a response, retry it, close and reopen the panel, and use **Clear conversation**. Confirm the browser's `dennie:history:v2` key is cleared and its `dennie:session:v2` value is rotated. Confirm expired history does not return after seven days. Check that `https://dandinh.net/dennie` explains the deployed data handling.
+3. Run the API smoke suite against the production endpoint (`SMOKE_ORIGIN=https://dandinh.net`, `SMOKE_LIVE=1`). Confirm allowed and denied CORS, invalid requests, health, streamed answer, and citation labels. Check API Gateway throttling with a short burst of preflight or invalid requests and verify excess requests receive `429` without invoking OpenAI. Stop the burst immediately after the limit is observed.
+4. Verify the UI shows a safe retry message for a provider failure using the widget test or a development deployment with an injected failing provider. Do not deliberately break the production OpenAI key to run this check.
+5. Observe the `Dennie-production-agent` CloudWatch dashboard and alarms through the agreed observation period. Review API 5xx, p95 latency, Lambda errors/throttles, provider failures, and request volume against the Phase 9 baseline. Confirm the alert subscription is active. Record the observation dates and findings before retiring the legacy service.
+6. Once stable, remove the separately deployed legacy Voiceflow Lambda and its old environment variables/secrets from AWS and GitHub repository configuration. Check that current HTML and referenced JavaScript from `dandinh.net` contain no Voiceflow URL, key, or project ID. Old hashed website assets may remain in the versioned S3 bucket to support cached pages and rollback; retire them only after the rollback window and browser cache lifetime have passed.
+
+If the website smoke fails, restore the previous S3 object versions with `npm run release:rollback:website -- <release-record>`. The agent API rollback procedure is in the Phase 9 runbook. Do not retire the legacy Lambda while a rollback may still need it.

@@ -13,9 +13,9 @@ Use Node.js 24.14.1 and npm 11.11.0 as specified in `.nvmrc` and `package.json`.
 
 ## Dennie RAG development
 
-The custom RAG chatbot lives in isolated packages so the static website can build and deploy independently. See [docs/development-environments.md](docs/development-environments.md) for setup and evaluation, and [docs/phase-9-release.md](docs/phase-9-release.md) for production release and rollback commands. Production has its own Agent and Monitoring stacks and shares the development Knowledge Base.
+The custom RAG chatbot lives in isolated packages so the static website can build and deploy independently. See [docs/development-environments.md](docs/development-environments.md) for setup and evaluation, [docs/phase-9-release.md](docs/phase-9-release.md) for production release and rollback commands, and [docs/phase-10-cutover.md](docs/phase-10-cutover.md) for cutover checks. Production has its own Agent and Monitoring stacks and shares the development Knowledge Base.
 
-## View the Phase 7 chat interface
+## View the Dennie chat interface
 
 From a fresh checkout, run:
 

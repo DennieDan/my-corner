@@ -15,8 +15,9 @@ interface Message extends HistoryMessage {
   sources?: ChatSource[];
 }
 
-const HISTORY_KEY = "dennie:history:v1";
-const SESSION_KEY = "dennie:session:v1";
+const HISTORY_KEY = "dennie:history:v2";
+const SESSION_KEY = "dennie:session:v2";
+const HISTORY_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1_000;
 const QUESTIONS = [
   "What projects has Dan worked on?",
   "What is Dan's background?",
@@ -26,9 +27,19 @@ const endpoint = chatEndpoint(process.env.NEXT_PUBLIC_AGENT_API_URL ?? "");
 
 function loadHistory(): Message[] {
   try {
-    const stored: unknown = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]");
-    if (!Array.isArray(stored)) return [];
-    const items: Message[] = stored.flatMap((item) => {
+    // The previous format had no timestamp, so its age cannot be verified.
+    localStorage.removeItem("dennie:history:v1");
+    localStorage.removeItem("dennie:session:v1");
+    const stored: unknown = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "null");
+    if (!stored || typeof stored !== "object" || Array.isArray(stored)) return [];
+    const { savedAt, messages } = stored as { savedAt?: unknown; messages?: unknown };
+    if (typeof savedAt !== "number" || !Number.isFinite(savedAt) ||
+        savedAt > Date.now() || Date.now() - savedAt >= HISTORY_MAX_AGE_MS || !Array.isArray(messages)) {
+      localStorage.removeItem(HISTORY_KEY);
+      localStorage.removeItem(SESSION_KEY);
+      return [];
+    }
+    const items: Message[] = messages.flatMap((item) => {
       if (!item || typeof item !== "object" ||
           (item.role !== "user" && item.role !== "assistant") ||
           typeof item.content !== "string" || !item.content.trim() || item.content.length > 4_000) return [];
@@ -115,18 +126,46 @@ export function ChatWidget() {
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(boundMessages(messages).map(({ role, content, sources }) => ({ role, content, sources }))));
+      if (messages.length) {
+        const existing: unknown = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "null");
+        const prior = existing && typeof existing === "object" && !Array.isArray(existing)
+          ? (existing as { savedAt?: unknown }).savedAt : undefined;
+        const savedAt = typeof prior === "number" && Number.isFinite(prior) && prior <= Date.now() &&
+          Date.now() - prior < HISTORY_MAX_AGE_MS ? prior : Date.now();
+        localStorage.setItem(HISTORY_KEY, JSON.stringify({
+          savedAt,
+          messages: boundMessages(messages).map(({ role, content, sources }) => ({ role, content, sources })),
+        }));
+      } else localStorage.removeItem(HISTORY_KEY);
     } catch { /* browsing without storage still works */ }
   }, [messages, ready]);
   useEffect(() => { if (open) inputRef.current?.focus(); }, [open]);
   useEffect(() => { if (open) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight }); }, [messages, partial, pending, open]);
-
   const stop = useCallback(() => {
     requestRef.current += 1;
     abortRef.current?.abort();
     abortRef.current = null;
     setBusy(false);
   }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      try {
+        const stored: unknown = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "null");
+        const savedAt = stored && typeof stored === "object" && !Array.isArray(stored)
+          ? (stored as { savedAt?: unknown }).savedAt : undefined;
+        if (typeof savedAt === "number" && Date.now() - savedAt >= HISTORY_MAX_AGE_MS) {
+          stop();
+          localStorage.removeItem(HISTORY_KEY);
+          localStorage.removeItem(SESSION_KEY);
+          setMessages([]);
+          setPending(""); setPartial(""); setSources([]);
+          setNotice("Conversation expired after seven days.");
+        }
+      } catch { /* browsing without storage still works */ }
+    }, 60_000);
+    return () => window.clearInterval(timer);
+  }, [stop]);
 
   useEffect(() => {
     if (previousPath.current !== pathname) {
