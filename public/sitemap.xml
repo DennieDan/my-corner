@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://dandinh.net/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <image:image><image:loc>https://dandinh.net/profile-img.jpg</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/timeline/oct_2022.jpg</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/timeline/oct_2022_1.jpg</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/timeline/jun_2024.jpg</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/timeline/jun_2025.jpeg</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/projects/frontend_thumbnail.png</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/projects/data-app_thumbnail.png</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/projects/gen2050y_guidebook.png</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/projects/araag_thumbnail.png</image:loc></image:image>
+    <image:image><image:loc>https://dandinh.net/images/projects/gym-crowd-prediction_thumbnail.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://dandinh.net/dennie</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>weekly</changefreq>
   </url>
 </urlset>

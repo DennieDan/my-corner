@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { JourneyTimeline } from "@/components/journey-timeline";
 import siteMetadata from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  alternates: { canonical: `${siteMetadata.siteUrl}/` },
+};
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -207,7 +212,7 @@ export default function HomePage() {
               <div className="relative h-36 w-36 overflow-hidden rounded-full shadow-lg ring-4 ring-[#7a9e8e]/30 transition-[transform,box-shadow] duration-300 ease-out group-hover:scale-[1.02] group-hover:shadow-xl group-hover:ring-[#7a9e8e]/45 group-focus-within:scale-[1.02] group-focus-within:shadow-xl group-focus-within:ring-[#7a9e8e]/45 md:h-44 md:w-44">
                 <Image
                   src={siteMetadata.avatarImage}
-                  alt="Profile photo"
+                  alt="Profile photo of Dan Dinh (Dinh Duy Linh Dan)"
                   fill
                   className="object-cover"
                   priority
