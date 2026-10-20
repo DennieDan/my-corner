@@ -16,8 +16,9 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "My Corner",
-  description: "Welcome to my personal website",
+  title: "Dan Dinh (Dinh Duy Linh Dan) | Personal Website",
+  description:
+    "Projects, experience, and resume of Dan Dinh, also known as Dinh Duy Linh Dan.",
   generator: "v0.app",
   icons: {
     icon: {

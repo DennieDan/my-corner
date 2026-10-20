@@ -19,7 +19,7 @@ const siteMetadata: SiteMetadata = {
   author: "Dan Dinh",
   headerTitle: "stay inspired",
   description:
-    "Welcome to my corner. You can simply ask what you want to know about me, by talking with Dennie - a 24/24 chatbot version of me. No rush, let's see what I have on my plate first.",
+    "I'm Dinh Duy Linh Dan, call me Dan Dinh. Welcome to My Corner, where you can explore my projects and experience or ask Dennie, my chatbot, about me.",
   language: "en-us",
   theme: "system", // system, dark or light
   siteUrl: "https://dandinh.net",
